@@ -2,7 +2,7 @@
   "plugins": ["react", "jsx-a11y", "import"],
   "extends": ["airbnb-base", "plugin:react/all"],
   "rules": {
-    "semi": ["error", "never"],
+    "semi": ["error"],
     "arrow-parens": "off",
     "no-mixed-operators": "off",
     "react/jsx-filename-extension": "off",
