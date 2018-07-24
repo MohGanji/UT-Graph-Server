@@ -1,0 +1,38 @@
+{
+  "plugins": ["react", "jsx-a11y", "import"],
+  "extends": ["airbnb-base", "plugin:react/all"],
+  "rules": {
+    "semi": ["error", "never"],
+    "arrow-parens": "off",
+    "no-mixed-operators": "off",
+    "react/jsx-filename-extension": "off",
+    "react/require-optimization": "off",
+    "react/jsx-indent": "off",
+    "react/no-multi-comp": "off",
+    "react/jsx-max-props-per-line": "off",
+    "react/jsx-sort-props": "off",
+    "react/jsx-indent-props": "off",
+    "react/jsx-no-literals": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/prop-types": "off",
+    "react/jsx-no-bind": "off",
+    "object-curly-newline": "off",
+    "react/no-set-state": "off",
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1,
+        "maxBOF": 0
+      }
+    ],
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "no-use-before-define": "off",
+    "curly": ["error", "all"],
+    "function-paren-newline": "off"
+  },
+  "globals": {
+    "DEV": true,
+    "window": true
+  }
+}
