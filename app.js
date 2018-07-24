@@ -8,7 +8,24 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
+const mongoose = require('./utils/mongo');
+const User = mongoose.model('User');
+
 var app = express();
+
+// sample create models
+app.get('/api/register', async function(req, res) {
+  console.log(req.query);
+  let name = req.query.name;
+  let year = req.query.year;
+  var silence = new user({ name: name });
+  console.log(name);
+  console.log(year);
+  const user = await User.create({
+    name: name,
+  });
+  res.send('salam');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
