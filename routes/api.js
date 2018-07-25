@@ -1,7 +1,10 @@
 var express = require('express');
-var mongoose = require('./utils/mongo');
+var mongoose = require('../utils/mongo');
+var jwt = require('jsonwebtoken');
 var router = express.Router();
 var User = mongoose.model('User');
+
+var secret = 'SECRET'; //to be changed later **
 
 router.post('/login', function(req, res) {
   var username = req.body.username;
@@ -13,8 +16,19 @@ router.post('/login', function(req, res) {
       return res.status(500).send();
     }
 
-    if (!user) {
-      return res.status(404).send();
+    if (user) {
+      return res.status(403).send();
+    } else {
+      return res.json({
+        token: jwt.sign(
+          {
+            username: username,
+            password: password,
+          },
+          secret,
+          { expiresIn: 60 * 60 },
+        ),
+      });
     }
   });
 });
