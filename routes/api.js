@@ -10,7 +10,7 @@ router.post('/login', function(req, res) {
   User.findOne({ username: username, password: password }, function(err, user) {
     if (err) {
       console.log(err);
-      res.status(500).send();
+      return res.status(500).send();
     }
 
     if (!user) {
