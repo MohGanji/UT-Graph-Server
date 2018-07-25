@@ -16,8 +16,8 @@ router.post('/login', function(req, res) {
       return res.status(500).send();
     }
 
-    if (user) {
-      return res.status(403).send();
+    if (!user) {
+      return res.status(404).send();
     } else {
       return res.json({
         token: jwt.sign(
