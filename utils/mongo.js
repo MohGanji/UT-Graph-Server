@@ -12,6 +12,4 @@ mongoose.connect(
 
 const UserSchema = require('../models/User');
 
-mongoose.model('User', UserSchema);
-
 module.exports = mongoose;

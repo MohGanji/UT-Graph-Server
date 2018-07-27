@@ -8,22 +8,26 @@ var bodyParser = require('body-parser');
 var api = require('./routes/api');
 
 const mongoose = require('./utils/mongo');
-const User = mongoose.model('User');
+const User = require('./models/User');
 
 var app = express();
 
 // sample create models
-
 app.get('/api/register', async function(req, res) {
   console.log(req.query);
   let name = req.query.name;
   let year = req.query.year;
-  var silence = new user({ name: name });
   console.log(name);
   console.log(year);
-  const user = await User.create({
-    name: name,
-  });
+  var user = await User.create(
+    {
+      name: name,
+      password: '123',
+    },
+    function(err) {
+      console.log(err);
+    },
+  );
   res.send('salam');
 });
 
@@ -39,7 +43,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api', api);
+//app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
