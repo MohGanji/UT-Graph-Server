@@ -3,6 +3,22 @@ var Event = require('../../../../models/Event');
 var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
 
+router.get('/', function (req, res) {
+  Event.find({}).exec(function (err, events) {
+
+    if (err) {
+      console.log(err);
+      return res.status(500).send();
+    }
+
+    var mappedEvents = events.map(function (event) {
+      return event.toJSON();
+    });
+
+    res.status(200).send(JSON.stringify({ data: mappedEvents }));
+  })
+});
+
 router.post('/', isAuthenticated, async function (req, res) {
 
   let title = req.body.data.title;
