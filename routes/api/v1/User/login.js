@@ -1,17 +1,18 @@
 var express = require('express');
 var mongoose = require('../../../../utils/mongo');
+var config = require('../../../../utils/config');
 var jwt = require('jsonwebtoken');
 var router = express.Router();
 var User = mongoose.model('User');
 
-var secret = 'SECRET'; //to be changed later **
+var secret = config.secret;
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
   console.log(username);
 
-  User.findOne({ username: username, password: password }, function(err, user) {
+  User.findOne({ username: username, password: password }, function (err, user) {
     if (err) {
       console.log(err);
       return res.status(500).send();
