@@ -9,7 +9,7 @@ router.get('/', function (req, res) {
       return user.toJSON();
     });
 
-    res.status(200).send("{ \"data:\" " + JSON.stringify(mappedUsers) + "}");
+    res.status(200).send(JSON.stringify({ data: mappedUsers }));
   });
 });
 
