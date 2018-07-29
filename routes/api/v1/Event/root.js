@@ -19,6 +19,22 @@ router.get('/', function (req, res) {
   })
 });
 
+router.get('/:id', function (req, res) {
+  let id = req.params.id;
+  Event.findOne({ title: id }, function (err, event) { //search by which id?? ***NOT COMPLETE***
+    if (err) {
+      console.log(err);
+      return res.status(500).send();
+    }
+    if (event) {
+      return res.status(200).send(JSON.stringify({ data: event.toJSON() }));
+    }
+    else {
+      return res.status(404).send();
+    }
+  })
+});
+
 router.post('/', isAuthenticated, async function (req, res) {
 
   let title = req.body.data.title;
