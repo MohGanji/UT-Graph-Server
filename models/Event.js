@@ -9,4 +9,11 @@ var EventSchema = mongoose.Schema({
   participants: [String]
 });
 
+EventSchema.methods.toJSON = function () {
+  var obj = this.toObject();
+  delete obj._id;
+  delete obj.__v;
+  return obj;
+};
+
 module.exports = mongoose.model('Event', EventSchema);
