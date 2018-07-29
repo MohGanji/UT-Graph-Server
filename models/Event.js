@@ -6,7 +6,7 @@ var EventSchema = mongoose.Schema({
   endTime: { type: Date, required: true },
   organizer: { type: String, required: true },
   description: String,
-  particpants: [String]
+  participants: [String]
 });
 
 module.exports = mongoose.model('Event', EventSchema);
