@@ -47,7 +47,7 @@ router.post('/', isAuthenticated, async function (req, res) {
 
 router.get('/:id', function (req, res) {
   let id = req.params.id;
-  Event.findOne({ title: id }, function (err, event) { //search by which id?? ***NOT COMPLETE***
+  Event.findOne({ _id: id }, function (err, event) { //search by which id?? ***NOT COMPLETE***
     if (err) {
       console.log(err);
       return res.status(500).send();
