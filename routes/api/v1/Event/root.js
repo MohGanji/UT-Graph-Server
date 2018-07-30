@@ -24,7 +24,7 @@ router.post('/', isAuthenticated, async function (req, res) {
   let title = req.body.data.title;
   let beginTime = new Date(req.body.data.beginTime); //ok?
   let endTime = new Date(req.body.data.endTime);
-  let organizer = req.body.data.organizer;
+  let organizer = req.username;
   let description = req.body.data.description;
   let participants = req.body.data.participants;
 
@@ -61,12 +61,12 @@ router.get('/:id', function (req, res) {
   })
 });
 
-router.put('/:id', function (req, res) {
+router.put('/:id', isAuthenticated, function (req, res) {
   let id = req.params.id;
   let title = req.body.data.title;
   let beginTime = new Date(req.body.data.beginTime);
   let endTime = new Date(req.body.data.endTime);
-  let organizer = req.body.data.organizer;
+  let organizer = req.username;
   let description = req.body.data.description;
   let participants = req.body.data.participants;
 
