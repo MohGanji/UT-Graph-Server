@@ -5,7 +5,7 @@ var router = express.Router();
 
 router.get('/', async function (req, res) {
 
-  var users = await User.find({}); //try?
+  var users = await User.find({}).catch((err) => res.status(500).send());
   var mappedUsers = await Promise.all(users.map(async function (user) {
     return user.toJSON();
   }));
