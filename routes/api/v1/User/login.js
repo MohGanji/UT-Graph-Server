@@ -7,32 +7,26 @@ var User = mongoose.model('User');
 
 var secret = config.secret;
 
-router.post('/', function (req, res) {
-  var username = req.body.username;
-  var password = req.body.password;
-  console.log(username);
+router.post('/', async function (req, res) {
+  var username = req.body.data.username;
+  var password = req.body.data.password;
 
-  User.findOne({ username: username, password: password }, function (err, user) {
-    if (err) {
-      console.log(err);
-      return res.status(500).send();
-    }
+  var user = await User.findOne({ username: username, password: password }).catch((err) => res.status(500).send());
 
-    if (user) {
-      return res.status(404).send();
-    } else {
-      return res.json({
-        token: jwt.sign(
-          {
-            username: username,
-            password: password,
-          },
-          secret,
-          { expiresIn: 60 * 60 },
-        ),
-      });
-    }
-  });
+  if (!user) {
+    return res.status(404).send();
+  } else {
+    return res.json({
+      token: jwt.sign(
+        {
+          username: username,
+          password: password,
+        },
+        secret,
+        { expiresIn: 60 * 60 },
+      ),
+    });
+  }
 });
 
 module.exports = router;
