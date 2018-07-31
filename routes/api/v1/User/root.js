@@ -2,15 +2,15 @@ var express = require('express');
 var User = require('../../../../models/User');
 var router = express.Router();
 
-router.get('/', function (req, res) {
 
-  User.find({}).exec(function (err, users) {
-    var mappedUsers = users.map(function (user) {
-      return user.toJSON();
-    });
+router.get('/', async function (req, res) {
 
-    res.status(200).send(JSON.stringify({ data: mappedUsers }));
-  });
+  var users = await User.find({}); //try?
+  var mappedUsers = await Promise.all(users.map(async function (user) {
+    return user.toJSON();
+  }));
+
+  res.status(200).send(JSON.stringify({ data: mappedUsers }));
 });
 
 router.get('/:id', function (req, res) {
