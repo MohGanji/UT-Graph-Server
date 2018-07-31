@@ -3,20 +3,15 @@ var Event = require('../../../../models/Event');
 var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
 
-router.get('/', function (req, res) {
-  Event.find({}).exec(function (err, events) {
+router.get('/', async function (req, res) {
 
-    if (err) {
-      console.log(err);
-      return res.status(500).send();
-    }
+  var events = await Event.find({}).catch((err) => res.status(500).send())
 
-    var mappedEvents = events.map(function (event) {
-      return event.toJSON();
-    });
+  var mappedEvents = await Promise.all(events.map(async function (event) {
+    return (await event.toJSON());
+  }));
 
-    res.status(200).send(JSON.stringify({ data: mappedEvents }));
-  })
+  res.status(200).send(JSON.stringify({ data: mappedEvents }));
 });
 
 router.post('/', isAuthenticated, async function (req, res) {
