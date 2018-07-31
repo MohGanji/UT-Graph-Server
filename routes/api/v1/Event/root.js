@@ -31,12 +31,9 @@ router.post('/', isAuthenticated, async function (req, res) {
       organizer: organizer,
       description: description,
       participants: participants
-    },
-    function (err) {
-      console.log(err);
-      return res.status(500).send();
-    },
-  );
+    }
+  ).catch((err) => res.status(500).send());
+
   return res.status(200).send();
 });
 
