@@ -50,39 +50,15 @@ router.get('/:id', async function (req, res) {
   }
 });
 
-router.put('/:id', isAuthenticated, function (req, res) {
-  let id = req.params.id;
-  let title = req.body.data.title;
-  let beginTime = new Date(req.body.data.beginTime);
-  let endTime = new Date(req.body.data.endTime);
-  let organizer = req.username;
-  let description = req.body.data.description;
-  let participants = req.body.data.participants;
+router.put('/:id', isAuthenticated, async function (req, res) {
 
-  Event.findOne({ _id: id }, function (err, event) {  //search by which id?? ***NOT COMPLETE***
-    if (err) {
-      console.log(err);
-      return res.status(500).send();
-    }
-    if (!event) {
-      return res.status(404).send();
-    }
-    else { //it's assumed that all information will be sent
-      event.title = title;
-      event.beginTime = beginTime;
-      event.endTime = endTime;
-      event.organizer = organizer;
-      event.description = description;
-      event.participants = participants;
+  var id = req.params.id;
+  var updatedEvent = req.body.data;
+  updatedEvent.organizer = req.username;
 
-      event.save(function (err, updatedEvent) {
-        if (err) {
-          return res.status(500).send();
-        }
-        res.status(200).send();
-      })
-    }
-  })
-})
+  await Event.findByIdAndUpdate(id, { $set: updatedEvent });
+
+  return res.status(200).send();
+});
 
 module.exports = router;
