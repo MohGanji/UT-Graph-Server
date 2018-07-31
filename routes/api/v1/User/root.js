@@ -13,22 +13,17 @@ router.get('/', async function (req, res) {
   res.status(200).send(JSON.stringify({ data: mappedUsers }));
 });
 
-router.get('/:id', function (req, res) {
+router.get('/:id', async function (req, res) {
   let username = req.params.id;
 
-  User.findOne({ username: username }, function (err, user) {
-    if (err) {
-      console.log(err);
-      return res.status(500).send();
-    }
+  var user = await User.findOne({ username: username }).catch((err) => res.status(500).send());
 
-    if (user) {
-      return res.status(200).send(JSON.stringify({ data: user.toJSON() }));
-    }
-    else {
-      return res.status(404).send();
-    }
-  });
+  if (user) {
+    return res.status(200).send(JSON.stringify({ data: user.toJSON() }));
+  }
+  else {
+    return res.status(404).send();
+  }
 });
 
 module.exports = router;
