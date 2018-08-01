@@ -40,14 +40,15 @@ router.post('/', isAuthenticated, async function (req, res) {
 
 router.get('/:id', async function (req, res) {
   let id = req.params.id;
-
-  let event = await Event.findOne({ _id: id }).catch((err) => res.status(500).send());
-
-  if (event) {
-    return res.status(200).send(JSON.stringify({ data: event.toJSON() }));
+  let event;
+  try {
+    event = await Event.findOne({ _id: id });
   }
-  else {
-    return res.status(404).send();
+  catch (err) {
+    return res.status(500).send();
+  }
+  finally {
+    return res.status(200).send(JSON.stringify({ data: event.toJSON() }));
   }
 });
 
