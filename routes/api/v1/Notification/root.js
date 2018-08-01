@@ -1,6 +1,6 @@
 var express = require('express');
-var NotificationUser = require('../../../../models/Notification');
-var User = require('../../../../models/Notification');
+var NotificationUser = require('../../../../models/NotificationUser');
+var User = require('../../../../models/User');
 var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
 
