@@ -78,4 +78,16 @@ router.post('/:id/signup', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 });
 
+router.delete('/:id', async function (req, res) {
+  let username = req.username;
+  let id = req.params.id;
+  let event = await findById(id);
+
+  if (event.username != username) {
+    return res.status(401).send();
+  } else {
+    await Event.findByIdAndDelete(id);
+    await UserEvent.remove({ event: event._id })
+  }
+})
 module.exports = router;
