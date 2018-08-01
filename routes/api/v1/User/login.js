@@ -17,11 +17,11 @@ router.post('/', async function (req, res) {
     return res.status(404).send();
   } else {
     var authenticationObj = {
-      headers: {
-        authentication: ''
+      data: {
+        token: ''
       }
     }
-    authenticationObj.headers.authentication = jwt.sign(
+    authenticationObj.data.token = jwt.sign(
       {
         username: username,
       },

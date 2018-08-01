@@ -2,8 +2,7 @@ var jwt = require('jsonwebtoken');
 var config = require('../utils/config');
 
 function verifyJWTToken(req, res, next) {
-
-  let token = req.body.headers.authentication;
+  let token = req.headers.authorization;
   let secret = config.secret;
 
   jwt.verify(token, secret, function (err, decoded) {
