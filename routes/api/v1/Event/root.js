@@ -22,7 +22,6 @@ router.post('/', isAuthenticated, async function (req, res) {
   let endTime = new Date(req.body.data.endTime);
   let organizer = req.username;
   let description = req.body.data.description;
-  let participants = req.body.data.participants;
 
   await Event.create(
     {
@@ -31,7 +30,6 @@ router.post('/', isAuthenticated, async function (req, res) {
       endTime: endTime,
       organizer: organizer,
       description: description,
-      participants: participants
     }
   ).catch((err) => res.status(500).send());
 
