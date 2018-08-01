@@ -6,6 +6,5 @@ var auth = require('./Auth');
 
 router.use('/user', user);
 router.use('/event', event);
-// router.use('/auth', auth);
 
 module.exports = router;
