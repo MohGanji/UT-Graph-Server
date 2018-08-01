@@ -32,4 +32,20 @@ router.get('/:id', isAuthenticated, async function (req, req) {
   }
 });
 
+router.delete('/:id', isAuthenticated, async function (req, res) { //TODO: find a better way to do this!
+  var username = req.username;
+  var user = await User.findOne({ username: username }).catch((err) => res.status(500).send());
+  var userId = user._id;
+  var notificationId = req.params.id;
+
+  var notification = await NotificationUser.findById(notificationId).catch((err) => res.status(500).send());
+  if (notification.user != userId) {
+    return res.status(401).send();
+  }
+  else {
+    await notification.remove(); //does it work correctly?
+    return res.status(200).send(JSON.stringify({ data: notification }));
+  }
+})
+
 module.exports = router;
