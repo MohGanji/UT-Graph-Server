@@ -53,8 +53,12 @@ router.get('/:id', async function (req, res) {
 router.put('/:id', isAuthenticated, async function (req, res) {
 
   var id = req.params.id;
+  var event = await Event.findById(id);
   var updatedEvent = req.body.data;
-  updatedEvent.organizer = req.username;
+
+  if (event.organizer != req.username) {
+    return res.status(401).send();
+  }
 
   await Event.findByIdAndUpdate(id, { $set: updatedEvent });
 
