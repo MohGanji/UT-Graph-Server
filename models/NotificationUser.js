@@ -7,4 +7,10 @@ var NotificationUserSchema = mongoose.Schema({
   read: Boolean
 });
 
+NotificationUserSchema.methods.toJSON = function () {
+  var obj = this.toObject();
+  delete obj._id;
+  return obj;
+};
+
 module.exports = mongoose.model('NotificationUser', NotificationUserSchema);
