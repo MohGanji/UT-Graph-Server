@@ -7,7 +7,7 @@ router.get('/', async function (req, res) {
 
   var users = await User.find({}).catch((err) => res.status(500).send());
   var mappedUsers = await Promise.all(users.map(async function (user) {
-    return user.toJSON();
+    return await user.toJSON();
   }));
 
   res.status(200).send(JSON.stringify({ data: mappedUsers }));
