@@ -16,16 +16,19 @@ router.post('/', async function (req, res) {
   if (!user) {
     return res.status(404).send();
   } else {
-    return res.json({
-      token: jwt.sign(
-        {
-          username: username,
-          password: password,
-        },
-        secret,
-        { expiresIn: 60 * 60 },
-      ),
-    });
+    var authenticationObj = {
+      headers: {
+        authentication: ''
+      }
+    }
+    authenticationObj.headers.authentication = jwt.sign(
+      {
+        username: username,
+      },
+      secret,
+      { expiresIn: 60 * 60 }
+    )
+    return res.json(authenticationObj);
   }
 });
 
