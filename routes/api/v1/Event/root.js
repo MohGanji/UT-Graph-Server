@@ -1,5 +1,6 @@
 var express = require('express');
 var Event = require('../../../../models/Event');
+let UserEvent = require('../../../../models/UserEvent');
 var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
 
@@ -58,6 +59,21 @@ router.put('/:id', isAuthenticated, async function (req, res) {
 
   await Event.findByIdAndUpdate(id, { $set: updatedEvent });
 
+  return res.status(200).send();
+});
+
+router.post('/:id/signup', isAuthenticated, async function (req, res) {
+  let username = req.username;
+  let user = await user.findOne({ username: username });
+  let userId = user._id;
+  let eventId = req.params.id;
+  let event = await Event.findOne({ _id: id });
+
+  await UserEvent.create({
+    user: userId,
+    event: eventId,
+    date: new Date()
+  });
   return res.status(200).send();
 });
 
