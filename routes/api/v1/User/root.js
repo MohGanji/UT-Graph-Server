@@ -1,7 +1,7 @@
 var express = require('express');
 var User = require('../../../../models/User');
 var router = express.Router();
-
+var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
 
 router.get('/', async function (req, res) {
 
@@ -24,6 +24,14 @@ router.get('/:id', async function (req, res) {
   else {
     return res.status(404).send();
   }
+});
+
+router.put('/', isAuthenticated, async function (req, res) {
+  let username = req.username;
+  let updatedUser = req.body.data;
+
+  await User.findOneAndUpdate({ username: username }, { $set: updatedUser });
+  return res.status(200).send();
 });
 
 module.exports = router;
