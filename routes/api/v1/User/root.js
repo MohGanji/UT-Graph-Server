@@ -34,4 +34,23 @@ router.put('/', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 });
 
+router.patch('/:activationStatus', isAuthenticated, async function (req, res) { //TODO: add to auth? why not?
+  let username = req.username;
+  let activationStatus = req.params.activationStatus;
+  let user = await User.findOne({ username: username });
+
+  if (activationStatus == 'active') {
+    user.active = true;
+  }
+  else if (activationStatus == 'deactive') {
+    user.active = false;
+  }
+  else {
+    return res.status(404).send();
+  }
+  await user.save();
+
+  return res.status(200).send();
+});
+
 module.exports = router;

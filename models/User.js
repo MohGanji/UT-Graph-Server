@@ -6,6 +6,7 @@ var UserSchema = mongoose.Schema({
   firstName: String,
   lastName: String,
   email: String,
+  active: { type: Boolean, default: true }
 });
 
 UserSchema.methods.toJSON = function () {
