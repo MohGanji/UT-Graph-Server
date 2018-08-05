@@ -80,7 +80,7 @@ router.post('/:id/signup', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 });
 
-router.delete('/:id', async function (req, res) {
+router.delete('/:id', isAuthenticated, async function (req, res) {
   let username = req.username;
   let id = req.params.id;
   let event = await findById(id);
