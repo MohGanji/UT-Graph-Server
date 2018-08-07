@@ -1,16 +1,17 @@
 const mongoose = require('mongoose');
 
-var NotificationUserSchema = mongoose.Schema({
+var NotificationSchema = mongoose.Schema({
   message: String,
   user: mongoose.Schema.Types.ObjectId,
+
   date: { type: Date, default: new Date() },
-  read: Boolean
+  read: Boolean,
 });
 
-NotificationUserSchema.methods.toJSON = function () {
+NotificationSchema.methods.toJSON = function() {
   var obj = this.toObject();
   delete obj._id;
   return obj;
 };
 
-module.exports = mongoose.model('NotificationUser', NotificationUserSchema);
+module.exports = mongoose.model('Notification', NotificationSchema);
