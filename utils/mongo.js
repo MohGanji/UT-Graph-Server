@@ -10,6 +10,6 @@ mongoose.connect(
   },
 );
 
-const UserSchema = require('../models/User');
+//const UserSchema = require('../models/User');
 
 module.exports = mongoose;
