@@ -101,16 +101,16 @@ router.post('/:id/signup_attendent', isAuthenticated, async function(req, res) {
   return res.status(200).send();
 });
 
-router.delete('/:id', isAuthenticated, async function(req, res) {
-  let username = req.username;
-  let id = req.params.id;
-  let event = await findById(id);
+// router.delete('/:id', isAuthenticated, async function(req, res) {
+//   let username = req.username;
+//   let id = req.params.id;
+//   let event = await findById(id);
 
-  if (event.username != username) {
-    return res.status(401).send();
-  } else {
-    await Event.findByIdAndDelete(id);
-    await UserEvent.remove({ event: event._id });
-  }
-});
+//   if (event.username != username) {
+//     return res.status(401).send();
+//   } else {
+//     await Event.findByIdAndDelete(id);
+//     await UserEvent.remove({ event: event._id });
+//   }
+// });
 module.exports = router;
