@@ -2,6 +2,9 @@ var express = require('express');
 var User = require('../../../../models/User');
 var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
+var UserEvent = require('../../../../models/UserEvent');
+let Event = require('../../../../models/Event');
+var mongoose = require('mongoose');
 
 router.get('/', async function (req, res) {
 
@@ -24,6 +27,34 @@ router.get('/:id', async function (req, res) {
   else {
     return res.status(404).send();
   }
+});
+
+router.get('/:id/events', async function (req, res) {
+  let username = req.params.id;
+  let user = await User.findOne({ username: username });
+
+  if (!user) {
+    return res.status(404).send();
+  }
+
+  let userId = user._id;
+  let docs, events;
+
+  try {
+    docs = await UserEvent.find({ user: userId });
+    events = await Promise.all(
+      docs.map(async function (doc) {
+        return await Event.findOne({ _id: doc.event }); //is it okay to return event?
+      }),
+    );
+  }
+  catch (err) {
+    return res.status(500);
+  }
+  finally {
+    return res.status(200).send(JSON.stringify({ data: docs }));
+  }
+
 });
 
 router.put('/', isAuthenticated, async function (req, res) {
