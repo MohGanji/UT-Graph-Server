@@ -7,7 +7,7 @@ var reset_password = require('./reset-password');
 var forget_password = require('./forget-password');
 var search = require('./search');
 
-router.use('/forget', forget_password);
+router.use('/forget_password', forget_password);
 router.use('/login', login);
 router.use('/register', register);
 router.use('/reset_password', reset_password);
