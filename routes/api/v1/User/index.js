@@ -4,12 +4,15 @@ var root = require('./root');
 var login = require('./login');
 var register = require('./register');
 var reset_password = require('./reset-password');
+var forget_password = require('./forget-password');
 var search = require('./search');
 
-router.use('/', root);
+router.use('/forget', forget_password);
 router.use('/login', login);
 router.use('/register', register);
-router.use('/reset-password', reset_password);
+router.use('/reset_password', reset_password);
 router.use('/search', search);
+
+router.use('/', root);
 
 module.exports = router;
