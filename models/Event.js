@@ -8,13 +8,13 @@ var EventSchema = mongoose.Schema({
   description: String,
 });
 
-EventSchema.methods.toJSON = function () {
+EventSchema.methods.toJSON = function() {
   var obj = this.toObject();
-  delete obj._id;
+  //delete obj._id;
   delete obj.__v;
   return obj;
 };
 
-EventSchema.index({ title: 'text', organizer: 'text', description: 'text' })
+EventSchema.index({ title: 'text', organizer: 'text', description: 'text' });
 
 module.exports = mongoose.model('Event', EventSchema);
