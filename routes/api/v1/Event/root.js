@@ -8,11 +8,11 @@ var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
 var mongoose = require('mongoose');
 
-router.get('/', async function (req, res) {
+router.get('/', async function(req, res) {
   var events = await Event.find({}).catch(err => res.status(500).send());
 
   var mappedEvents = await Promise.all(
-    events.map(async function (event) {
+    events.map(async function(event) {
       return await event.toJSON();
     }),
   );
@@ -20,7 +20,7 @@ router.get('/', async function (req, res) {
   res.status(200).send(JSON.stringify({ data: mappedEvents }));
 });
 
-router.post('/', isAuthenticated, async function (req, res) {
+router.post('/', isAuthenticated, async function(req, res) {
   let title = req.body.data.title;
   let beginTime = new Date(req.body.data.beginTime); //ok?
   let endTime = new Date(req.body.data.endTime);
@@ -38,40 +38,35 @@ router.post('/', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 });
 
-router.get('/:id', async function (req, res) {
+router.get('/:id', async function(req, res) {
   let id = req.params.id;
   let event;
   try {
     event = await Event.findOne({ _id: id });
+    return res.status(200).send(JSON.stringify({ data: event.toJSON() }));
   } catch (err) {
     return res.status(500).send();
-  } finally {
-    return res.status(200).send(JSON.stringify({ data: event.toJSON() }));
   }
 });
 
-router.get('/:id/participants', async function (req, res) {
+router.get('/:id/participants', async function(req, res) {
   let eventId = mongoose.Types.ObjectId(req.params.id);
   let docs, users;
 
   try {
     docs = await UserEvent.find({ event: eventId });
     users = await Promise.all(
-      docs.map(async function (doc) {
+      docs.map(async function(doc) {
         return await User.findOne({ _id: doc.user }); //is it okay to return user?
       }),
     );
-  }
-  catch (err) {
+    return res.status(200).send(JSON.stringify({ data: users }));
+  } catch (err) {
     return res.status(500);
   }
-  finally {
-    return res.status(200).send(JSON.stringify({ data: users }));
-  }
-
 });
 
-router.put('/:id', isAuthenticated, async function (req, res) {
+router.put('/:id', isAuthenticated, async function(req, res) {
   var id = req.params.id;
   var event = await Event.findById(id);
   var updatedEvent = req.body.data;
@@ -85,7 +80,7 @@ router.put('/:id', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 });
 
-router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
+router.post('/:id/signup_staff', isAuthenticated, async function(req, res) {
   let username = req.username;
   let user = await User.findOne({ username: username });
   let userId = user._id;
@@ -109,7 +104,7 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 });
 
-router.post('/:id/signup_attendent', isAuthenticated, async function (req, res) {
+router.post('/:id/signup_attendent', isAuthenticated, async function(req, res) {
   let username = req.username;
   let user = await user.findOne({ username: username });
   let userId = user._id;
