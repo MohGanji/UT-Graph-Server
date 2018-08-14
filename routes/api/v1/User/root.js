@@ -52,7 +52,7 @@ router.get('/:id/events', async function (req, res) {
     return res.status(500);
   }
   finally {
-    return res.status(200).send(JSON.stringify({ data: docs }));
+    return res.status(200).send(JSON.stringify({ data: events }));
   }
 
 });
