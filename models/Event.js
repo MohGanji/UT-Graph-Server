@@ -14,6 +14,6 @@ EventSchema.methods.toJSON = function () {
   return obj;
 };
 
-EventSchema.index({ title: 'text', organizer: 'text', description: 'text' })
+EventSchema.index({ title: 'text', organizer: 'text', description: 'text' });
 
 module.exports = mongoose.model('Event', EventSchema);
