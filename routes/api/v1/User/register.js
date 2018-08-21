@@ -7,8 +7,7 @@ const { check, validationResult } = require('express-validator/check');
 
 
 router.post('/', [
-  check('data.password').isLength({ min: 5 }),
-  check('asd', "tool bayad....").isLength({ min: 5 }),
+  // check('data.password', "passerror").isLength(8),
   check('data.username').custom(async value => {
     let user = await User.findOne({ username: value });
     if (user) {
@@ -19,9 +18,10 @@ router.post('/', [
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log("oh");
     return res.status(422).json({ errors: errors.array() });
+    // return res.json({ errors: errors.array() });
   }
-
   console.log(validationResult(req).array());
   let username = req.body.data.username;
   let newUser = req.body.data;
