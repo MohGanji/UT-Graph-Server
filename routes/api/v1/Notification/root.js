@@ -26,7 +26,7 @@ router.get('/', isAuthenticated, async function(req, res) {
 
 //   GET /:id/accept
 
-router.get('/:id/accept', isAuthenticated, async function(req, req) {
+router.get('/:id/accept', isAuthenticated, async function(req, res) {
   var username = req.username;
   var user = await User.findOne({ username: username }).catch(err =>
     res.status(500).send(),
@@ -52,7 +52,7 @@ router.get('/:id/accept', isAuthenticated, async function(req, req) {
   }
 });
 
-router.get('/:id', isAuthenticated, async function(req, req) {
+router.get('/:id', isAuthenticated, async function(req, res) {
   var username = req.username;
   var user = await User.findOne({ username: username }).catch(err =>
     res.status(500).send(),
