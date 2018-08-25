@@ -7,24 +7,33 @@ const { check, validationResult } = require('express-validator/check');
 
 
 router.post('/', [
-  // check('data.password', "passerror").isLength(8),
+  check('data.password', "password is too short!").isLength({ min: 6 }),
+  check('data.password', "password is too long!").isLength({ max: 32 }),
+  check('data.email', "email isnot valid!").isEmail(),
+  check('data.email').custom(async value => {
+    let user = await User.findOne({ email: value });
+    if (user) {
+      throw new Error('email already exists');
+    }
+  }),
   check('data.username').custom(async value => {
     let user = await User.findOne({ username: value });
     if (user) {
-      throw new Error('user already exists');
+      throw new Error('username already exists');
     }
   })
 ], async function (req, res) {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log("oh");
+    console.log("error");
     return res.status(422).json({ errors: errors.array() });
     // return res.json({ errors: errors.array() });
   }
   console.log(validationResult(req).array());
   let username = req.body.data.username;
   let newUser = req.body.data;
+  // throw new Error('userhyfyfuf already exists');
 
   try {
     await User.create(newUser)
