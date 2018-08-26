@@ -8,7 +8,11 @@ var mongoose = require('mongoose');
 
 router.get('/', async function (req, res) {
 
-  var users = await User.find({}).catch((err) => res.status(500).send());
+  try {
+    var users = await User.find({});
+  } catch (err) {
+    return res.status(500).send();
+  }
   var mappedUsers = await Promise.all(users.map(async function (user) {
     return await user.toJSON();
   }));
@@ -19,7 +23,11 @@ router.get('/', async function (req, res) {
 router.get('/:id', async function (req, res) {
   let username = req.params.id;
 
-  var user = await User.findOne({ username: username }).catch((err) => res.status(500).send());
+  try {
+    var user = await User.findOne({ username: username });
+  } catch (err) {
+    return res.status(500).send();
+  }
 
   if (user) {
     return res.status(200).send(JSON.stringify({ data: user.toJSON() }));

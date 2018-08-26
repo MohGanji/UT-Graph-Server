@@ -5,18 +5,18 @@ var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
 
-router.get('/', isAuthenticated, async function(req, res) {
+router.get('/', isAuthenticated, async function (req, res) {
   var username = req.username;
-  var user = await User.findOne({ username: username }).catch(err =>
-    res.status(500).send(),
-  );
-  var userId = user._id;
+  try {
+    var user = await User.findOne({ username: username });
+    var userId = user._id;
+    var notifications = await Notification.find({ user: userId });
+  } catch (err) {
+    return res.status(500).send();
+  }
 
-  var notifications = await Notification.find({ user: userId }).catch(err =>
-    res.status(500).send(),
-  );
   var mappedNotifications = await Promise.all(
-    notifications.map(async function() {
+    notifications.map(async function () {
       return await Notification.toJSON();
     }),
   );
@@ -26,17 +26,17 @@ router.get('/', isAuthenticated, async function(req, res) {
 
 //   GET /:id/accept
 
-router.get('/:id/accept', isAuthenticated, async function(req, res) {
+router.get('/:id/accept', isAuthenticated, async function (req, res) {
   var username = req.username;
-  var user = await User.findOne({ username: username }).catch(err =>
-    res.status(500).send(),
-  );
-  var userId = user._id;
+  try {
+    var user = await User.findOne({ username: username });
+    var userId = user._id;
 
-  var notificationId = req.params.id;
-  var notification = await Notification.findById(notificationId).catch(err =>
-    res.status(500).send(),
-  );
+    var notificationId = req.params.id;
+    var notification = await Notification.findById(notificationId);
+  } catch (err) {
+    return res.status(500).send();
+  }
 
   if (notification.event.organizer != userId) {
     return res.status(401).send();
@@ -52,17 +52,17 @@ router.get('/:id/accept', isAuthenticated, async function(req, res) {
   }
 });
 
-router.get('/:id', isAuthenticated, async function(req, res) {
+router.get('/:id', isAuthenticated, async function (req, res) {
   var username = req.username;
-  var user = await User.findOne({ username: username }).catch(err =>
-    res.status(500).send(),
-  );
-  var userId = user._id;
+  try {
+    var user = await User.findOne({ username: username });
+    var userId = user._id;
 
-  var notificationId = req.params.id;
-  var notification = await Notification.findById(notificationId).catch(err =>
-    res.status(500).send(),
-  );
+    var notificationId = req.params.id;
+    var notification = await Notification.findById(notificationId);
+  } catch (err) {
+    return res.status(500).send();
+  }
 
   if (notification.user != userId) {
     return res.status(401).send();
