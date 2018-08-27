@@ -6,6 +6,8 @@ var EventSchema = mongoose.Schema({
   endTime: { type: Date, required: true },
   organizer: { type: String, required: true },
   description: String,
+  createTime: Date,
+  location: String
 });
 
 EventSchema.methods.toJSON = function () {
