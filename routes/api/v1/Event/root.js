@@ -7,6 +7,7 @@ var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
 var mongoose = require('mongoose');
+const { check, validationResult } = require('express-validator/check');
 
 router.get('/', async function (req, res) {
   let pageToken = req.query.pageToken;
@@ -38,7 +39,32 @@ router.get('/', async function (req, res) {
   res.status(200).send(JSON.stringify({ data: mappedEvents, pageToken: lastPageToken }));
 });
 
-router.post('/', isAuthenticated, async function (req, res) {
+router.post('/', isAuthenticated, [
+  check('data.title', "Event title is too short!").isLength({ min: 6 }),
+  check('data.title', "Event title is too long!").isLength({ max: 64 }),
+  check('data.description', "Event description is too long!").isLength({ max: 1000 }),
+  check('req.username').custom(async value => {
+    let user = await User.findOne({ username: value });
+    if (!user) {
+      throw new Error('Organizer user not found!');
+    }
+  }),
+  check('data.beginTime').custom(async value => {
+    let currentTime = new Date();
+    let beginTime = new Date(value);
+    if (currentTime.getMilliseconds() > beginTime.getMilliseconds()) {
+      throw new Error('Beginning time of event is past!');
+    }
+  })
+], async function (req, res) {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log("error");
+    return res.status(422).json({ errors: errors.array() });
+  }
+  console.log(validationResult(req).array());
+
   let title = req.body.data.title;
   let beginTime = new Date(req.body.data.beginTime); //ok?
   let endTime = new Date(req.body.data.endTime);
