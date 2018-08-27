@@ -8,18 +8,6 @@ var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
 var mongoose = require('mongoose');
 
-// router.get('/', async function (req, res) {
-//   var events = await Event.find({}).limit(8).catch(err => res.status(500).send());
-
-//   var mappedEvents = await Promise.all(
-//     events.map(async function (event) {
-//       return await event.toJSON();
-//     }),
-//   );
-
-//   res.status(200).send(JSON.stringify({ data: mappedEvents }));
-// });
-
 router.get('/', async function (req, res) {
   let pageToken = req.query.pageToken;
   let time;
@@ -29,14 +17,12 @@ router.get('/', async function (req, res) {
     let decodedTokenNumber = Number(decodedToken);
     time = new Date(decodedTokenNumber);
   } else {
-    time = new Date(0);
+    time = new Date();
   }
-  // console.log(time);
-  // res.status(200).send();
 
   var events = await Event
-    .find({ "beginTime": { $gt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
-    .sort({ 'date': -1 })
+    .find({ "createTime": { $lt: time } })
+    .sort({ 'createTime': -1 })
     .limit(8)
     .catch(err => res.status(500).send());
 
@@ -45,12 +31,10 @@ router.get('/', async function (req, res) {
       return await event.toJSON();
     }),
   );
-  //TODO: change sending token style!
-  let lastPageTime = events[events.length - 1].beginTime.getTime().toString();
+
+  let lastPageTime = events[events.length - 1].createTime.getTime().toString();
   let lastPageToken = await Buffer.from(lastPageTime).toString('base64')
-  console.log('this is events: ', events);
-  console.log('this is time: ', time);
-  console.log('this is pageToken: ', pageToken);
+
   res.status(200).send(JSON.stringify({ data: mappedEvents, pageToken: lastPageToken }));
 });
 
@@ -58,8 +42,11 @@ router.post('/', isAuthenticated, async function (req, res) {
   let title = req.body.data.title;
   let beginTime = new Date(req.body.data.beginTime); //ok?
   let endTime = new Date(req.body.data.endTime);
+  let createTime = new Date();
   let organizer = req.username;
   let description = req.body.data.description;
+  let location = req.body.data.location;
+  console.log(req.body.data);
 
   await Event.create({
     title: title,
@@ -67,6 +54,8 @@ router.post('/', isAuthenticated, async function (req, res) {
     endTime: endTime,
     organizer: organizer,
     description: description,
+    location: location,
+    createTime: createTime
   }).catch(err => res.status(500).send());
 
   return res.status(200).send();
