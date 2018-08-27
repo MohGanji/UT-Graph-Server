@@ -7,7 +7,7 @@ var router = express.Router();
 
 var secret = config.secret;
 
-router.post('/', async function(req, res) {
+router.post('/', async function (req, res) {
   var username = req.body.data.username;
   var password = req.body.data.password;
 
