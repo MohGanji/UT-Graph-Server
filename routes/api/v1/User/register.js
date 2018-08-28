@@ -7,8 +7,15 @@ const { check, validationResult } = require('express-validator/check');
 
 
 router.post('/', [
-  check('data.password', "password is too short!").isLength({ min: 6 }),
-  check('data.password', "password is too long!").isLength({ max: 32 }),
+  check('data.password')
+    .isLength({ min: 6 })
+    .withMessage("password is too short!"),
+  check('data.password')
+    .isLength({ max: 32 })
+    .withMessage("password is too long!"),
+  check('username').not()
+    .isEmpty()
+    .withMessage('Username cannot be empty!'),
   check('data.email', "email isnot valid!").isEmail(),
   check('data.email').custom(async value => {
     let user = await User.findOne({ email: value });
@@ -28,12 +35,10 @@ router.post('/', [
   if (!errors.isEmpty()) {
     console.log("error");
     return res.status(422).json({ errors: errors.array() });
-    // return res.json({ errors: errors.array() });
   }
   console.log(validationResult(req).array());
   let username = req.body.data.username;
   let newUser = req.body.data;
-  // throw new Error('userhyfyfuf already exists');
 
   try {
     await User.create(newUser)
