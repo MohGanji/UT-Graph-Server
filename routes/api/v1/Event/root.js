@@ -63,19 +63,21 @@ router.post('/', isAuthenticated, [
   check('data.title', "Event title is too short!").isLength({ min: 6 }),
   check('data.title', "Event title is too long!").isLength({ max: 64 }),
   check('data.description', "Event description is too long!").isLength({ max: 1000 }),
-  check('req.username').custom(async value => {
-    let user = await User.findOne({ username: value });
+  check('req.username').custom(async (value, { req }) => {
+    console.log(req.username);
+    console.log(value);
+    let user = await User.findOne({ username: req.username });
     if (!user) {
       throw new Error('Organizer user not found!');
     }
   }),
-  check('data.beginTime').custom(async value => {
-    let currentTime = new Date();
-    let beginTime = new Date(value);
-    if (currentTime.getMilliseconds() > beginTime.getMilliseconds()) {
-      throw new Error('Beginning time of event is past!');
-    }
-  })
+  // check('data.beginTime').custom(async value => {
+  //   let currentTime = new Date();
+  //   let beginTime = new Date(value);
+  //   if (currentTime.getMilliseconds() > beginTime.getMilliseconds()) {
+  //     throw new Error('Beginning time of event is past!');
+  //   }
+  // })
 ], async function (req, res) {
 
   const errors = validationResult(req);
