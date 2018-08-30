@@ -12,7 +12,7 @@ router.get('/:status', isAuthenticated, async function (req, res) {
     var userId = user._id;
     var notifications;
     if (req.params.status == 1)
-      notifications = await Notification.find({ user: userId, read: true });
+      notifications = await Notification.find({ user: userId, read: false });
     else
       notifications = await Notification.find({ user: userId });
   } catch (err) {
@@ -20,8 +20,8 @@ router.get('/:status', isAuthenticated, async function (req, res) {
   }
 
   var mappedNotifications = await Promise.all(
-    notifications.map(async function () {
-      return await Notification.toJSON();
+    notifications.map(async function (notif) {
+      return await notif.toJSON();
     }),
   );
 
