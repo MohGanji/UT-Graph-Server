@@ -22,7 +22,6 @@ router.get('/', async function (req, res) {
     time = new Date();
   }
 
-<<<<<<< HEAD
   try {
     var events = await Event
       .find({ "beginTime": { $gt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
@@ -32,13 +31,6 @@ router.get('/', async function (req, res) {
   catch (err) {
     return res.status(500).send();
   }
-=======
-  var events = await Event
-    .find({ "createTime": { $lt: time } })
-    .sort({ 'createTime': -1 })
-    .limit(8)
-    .catch(err => res.status(500).send());
->>>>>>> c6167041c5a8e29689e57c93e72e210a06e73142
 
   var mappedEvents = await Promise.all(
     events.map(async function (event) {
