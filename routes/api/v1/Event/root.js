@@ -8,7 +8,7 @@ var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
 var mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator/check');
-let findIdByUsername = require('../../../../utils/findIdByUsename');
+let findIdByUsername = require('../../../../utils/findIdByUsername');
 
 router.get('/', async function (req, res) {
   let pageToken = req.query.pageToken;
@@ -144,10 +144,10 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
   let event = await Event.findOne({ _id: eventId });
 
   await Notification.create({
-    user: findIdByUsername(event.organizer),
+    user: await findIdByUsername(event.organizer),
     read: false,
     type: 'REQUEST',
-    applicant: findIdByUsername(username),
+    applicant: await findIdByUsername(username),
     event: eventId,
   });
 
