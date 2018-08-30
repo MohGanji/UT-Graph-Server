@@ -8,6 +8,7 @@ var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
 var mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator/check');
+let findIdByUsername = require('../../../../utils/findIdByUsename');
 
 // router.get('/', async function (req, res) {
 //   var events = await Event.find({}).limit(8).catch(err => res.status(500).send());
@@ -151,14 +152,14 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
   let user = await User.findOne({ username: username });
   let userId = user._id;
   let eventId = req.params.id;
-  let event = await Event.findOne({ _id: userId });
+  let event = await Event.findOne({ _id: eventId });
 
   await Notification.create({
-    user: event.organizer,
+    user: findIdByUsername(event.organizer),
     read: false,
     type: 'REQUEST',
-    applicant: username,
-    event: event,
+    applicant: findIdByUsername(username),
+    event: eventId,
   });
 
   await UserEvent.create({
