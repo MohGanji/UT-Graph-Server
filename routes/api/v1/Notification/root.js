@@ -5,12 +5,16 @@ var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
 
-router.get('/', isAuthenticated, async function (req, res) {
+router.get('/:status', isAuthenticated, async function (req, res) {
   var username = req.username;
   try {
     var user = await User.findOne({ username: username });
     var userId = user._id;
-    var notifications = await Notification.find({ user: userId });
+    var notifications;
+    if (req.params.status == 1)
+      notifications = await Notification.find({ user: userId, read: true });
+    else
+      notifications = await Notification.find({ user: userId });
   } catch (err) {
     return res.status(500).send();
   }
