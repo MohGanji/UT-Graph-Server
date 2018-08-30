@@ -24,6 +24,7 @@ router.post('/', [
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log("error");
+    console.log(errors.array());
     return res.status(422).json({ errors: errors.array() });
   }
   console.log(validationResult(req).array());
@@ -53,7 +54,7 @@ router.post('/', [
         username: username,
       },
       secret,
-      { expiresIn: 60 * 60 },
+      // { expiresIn: 60 * 60 },
     );
     return res.json(authenticationObj);
   }
