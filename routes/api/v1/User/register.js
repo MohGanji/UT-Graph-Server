@@ -13,7 +13,7 @@ router.post('/', [
   check('data.password')
     .isLength({ max: 32 })
     .withMessage("password is too long!"),
-  check('username').not()
+  check('data.username').not()
     .isEmpty()
     .withMessage('Username cannot be empty!'),
   check('data.email', "email isnot valid!").isEmail(),
