@@ -4,7 +4,7 @@ var UserEventSchema = mongoose.Schema({
   user: mongoose.Schema.Types.ObjectId,
   role: {
     type: String,
-    enum: ['STAFF', 'ATTENDENT'],
+    enum: ['STAFF', 'ATTENDENT', 'ORGANIZER', 'STUDENT'],
   },
   event: mongoose.Schema.Types.ObjectId,
   date: Date,

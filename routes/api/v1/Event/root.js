@@ -83,9 +83,10 @@ router.post('/', isAuthenticated, [
   let organizer = req.username;
   let description = req.body.data.description;
   let location = req.body.data.location;
-  console.log(req.body.data);
+  let user = await User.findOne({ username: organizer });
+  let userId = user._id;
 
-  await Event.create({
+  let newEvent = await Event.create({
     title: title,
     beginTime: beginTime,
     endTime: endTime,
@@ -94,6 +95,15 @@ router.post('/', isAuthenticated, [
     location: location,
     createTime: createTime
   }).catch(err => res.status(500).send());
+
+  let eventId = newEvent._id;
+
+  await UserEvent.create({
+    user: userId,
+    event: eventId,
+    role: 'ORGANIZER',
+    date: new Date(),
+  });
 
   return res.status(200).send();
 });

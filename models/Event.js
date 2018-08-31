@@ -7,7 +7,8 @@ var EventSchema = mongoose.Schema({
   organizer: { type: String, required: true },
   description: String,
   createTime: Date,
-  location: String
+  location: String,
+  role: String,
 });
 
 EventSchema.methods.toJSON = function () {
