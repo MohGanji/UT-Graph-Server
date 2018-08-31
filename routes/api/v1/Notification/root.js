@@ -32,17 +32,19 @@ router.get('/:status', isAuthenticated, async function (req, res) {
 
 router.get('/:id/accept', isAuthenticated, async function (req, res) {
   var username = req.username;
-  try {
-    var user = await User.findOne({ username: username });
-    var userId = user._id;
+  var user, userId, notification, notificationId;
 
-    var notificationId = req.params.id;
-    var notification = await Notification.findById(notificationId);
+  try {
+    user = await User.findOne({ username: username });
+    userId = user._id;
+
+    notificationId = req.params.id;
+    notification = await Notification.findById(notificationId);
   } catch (err) {
     return res.status(500).send();
   }
 
-  if (notification.event.organizer != userId) {
+  if (notification.event.organizer != user.username) {
     return res.status(401).send();
   } else {
 
