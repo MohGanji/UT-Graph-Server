@@ -22,10 +22,11 @@ router.get('/', async function (req, res) {
     time = new Date();
   }
 
+  let events;
   try {
-    var events = await Event
-      .find({ "creatTime": { $lt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
-      .sort({ 'creatTime': -1 })
+    events = await Event
+      .find({ "createTime": { $lt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
+      .sort({ 'createTime': -1 })
       .limit(8)
   }
   catch (err) {
