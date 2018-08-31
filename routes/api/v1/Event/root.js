@@ -24,8 +24,8 @@ router.get('/', async function (req, res) {
 
   try {
     var events = await Event
-      .find({ "beginTime": { $gt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
-      .sort({ 'date': -1 })
+      .find({ "creatTime": { $lt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
+      .sort({ 'creatTime': -1 })
       .limit(8)
   }
   catch (err) {
@@ -38,8 +38,12 @@ router.get('/', async function (req, res) {
     }),
   );
 
-  let lastPageTime = events[events.length - 1].createTime.getTime().toString();
-  let lastPageToken = await Buffer.from(lastPageTime).toString('base64')
+  let lastPageTime;
+  let lastPageToken;
+  if (events.lentgh > 0) {
+    lastPageTime = events[events.length - 1].createTime.getTime().toString();
+    lastPageToken = await Buffer.from(lastPageTime).toString('base64');
+  }
 
   res.status(200).send(JSON.stringify({ data: mappedEvents, pageToken: lastPageToken }));
 });
