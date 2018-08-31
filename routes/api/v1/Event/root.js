@@ -8,6 +8,7 @@ var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
 var mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator/check');
+let findIdByUsername = require('../../../../utils/findIdByUsername');
 
 router.get('/', async function (req, res) {
   let pageToken = req.query.pageToken;
@@ -21,11 +22,15 @@ router.get('/', async function (req, res) {
     time = new Date();
   }
 
-  var events = await Event
-    .find({ "createTime": { $lt: time } })
-    .sort({ 'createTime': -1 })
-    .limit(8)
-    .catch(err => res.status(500).send());
+  try {
+    var events = await Event
+      .find({ "beginTime": { $gt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
+      .sort({ 'date': -1 })
+      .limit(8)
+  }
+  catch (err) {
+    return res.status(500).send();
+  }
 
   var mappedEvents = await Promise.all(
     events.map(async function (event) {
@@ -43,6 +48,21 @@ router.post('/', isAuthenticated, [
   check('data.title', "Event title is too short!").isLength({ min: 6 }),
   check('data.title', "Event title is too long!").isLength({ max: 64 }),
   check('data.description', "Event description is too long!").isLength({ max: 1000 }),
+  check('req.username').custom(async (value, { req }) => {
+    console.log(req.username);
+    console.log(value);
+    let user = await User.findOne({ username: req.username });
+    if (!user) {
+      throw new Error('Organizer user not found!');
+    }
+  }),
+  // check('data.beginTime').custom(async value => {
+  //   let currentTime = new Date();
+  //   let beginTime = new Date(value);
+  //   if (currentTime.getMilliseconds() > beginTime.getMilliseconds()) {
+  //     throw new Error('Beginning time of event is past!');
+  //   }
+  // })
 ], async function (req, res) {
 
   const errors = validationResult(req);
@@ -131,22 +151,16 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
   let user = await User.findOne({ username: username });
   let userId = user._id;
   let eventId = req.params.id;
-  let event = await Event.findOne({ _id: userId });
+  let event = await Event.findOne({ _id: eventId });
 
   await Notification.create({
-    user: event.organizer,
+    user: await findIdByUsername(event.organizer),
     read: false,
     type: 'REQUEST',
-    applicant: username,
-    event: event,
+    applicant: await findIdByUsername(username),
+    event: eventId,
   });
 
-  await UserEvent.create({
-    user: userId,
-    event: eventId,
-    role: 'STAFF',
-    date: new Date(),
-  });
   return res.status(200).send();
 });
 
