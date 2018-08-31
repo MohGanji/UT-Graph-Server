@@ -44,7 +44,9 @@ router.get('/:id/events', async function (req, res) {
     docs = await UserEvent.find({ user: userId });
     events = await Promise.all(
       docs.map(async function (doc) {
-        return await Event.findOne({ _id: doc.event }); //is it okay to return event?
+        let event = await Event.findOne({ _id: doc.event });
+        event.role = doc.role;
+        return event;
       }),
     );
   }
