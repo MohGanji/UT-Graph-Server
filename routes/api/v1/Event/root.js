@@ -61,6 +61,8 @@ router.post('/', isAuthenticated, [
       throw new Error('Organizer user not found!');
     }
   }),
+  check('data.beginTime', "Begin time of event is empty!").isEmpty(),
+  check('data.endTime', "End time of event is empty!").isEmpty()
   // check('data.beginTime').custom(async value => {
   //   let currentTime = new Date();
   //   let beginTime = new Date(value);
