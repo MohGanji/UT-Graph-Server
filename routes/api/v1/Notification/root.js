@@ -45,6 +45,14 @@ router.get('/:id/accept', isAuthenticated, async function (req, res) {
   if (notification.event.organizer != userId) {
     return res.status(401).send();
   } else {
+
+    await UserEvent.create({
+      user: notification.applicant,
+      event: notification.event,
+      role: 'STAFF',
+      date: new Date(),
+    });
+
     await Notification.create({
       user: notification.applicant,
       read: false,

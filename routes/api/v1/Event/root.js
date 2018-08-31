@@ -151,12 +151,6 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
     event: eventId,
   });
 
-  await UserEvent.create({
-    user: userId,
-    event: eventId,
-    role: 'STAFF',
-    date: new Date(),
-  });
   return res.status(200).send();
 });
 
