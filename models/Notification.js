@@ -7,7 +7,7 @@ var NotificationSchema = mongoose.Schema({
   read: Boolean,
   type: {
     type: String,
-    enum: ['REQUEST', 'ACCEPT', 'INFORMATION'],
+    enum: ['REQUEST', 'ACCEPT', 'REJECT', 'INFORMATION'],
   },
   applicant: String,
   event: String,
@@ -15,7 +15,6 @@ var NotificationSchema = mongoose.Schema({
 
 NotificationSchema.methods.toJSON = function () {
   var obj = this.toObject();
-  delete obj._id;
   return obj;
 };
 
