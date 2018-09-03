@@ -41,10 +41,8 @@ router.get('/', async function (req, res) {
 
   let lastPageTime;
   let lastPageToken;
-  if (events.length > 0) {
-    lastPageTime = events[events.length - 1].createTime.getTime().toString();
-    lastPageToken = await Buffer.from(lastPageTime).toString('base64');
-  }
+  lastPageTime = events[events.length - 1].createTime.getTime().toString();
+  lastPageToken = await Buffer.from(lastPageTime).toString('base64');
 
   res.status(200).send(JSON.stringify({ data: mappedEvents, pageToken: lastPageToken }));
 });
