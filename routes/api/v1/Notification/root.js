@@ -46,7 +46,7 @@ router.post('/read-all', isAuthenticated, async function (req, res) {
 
 //   GET /:id/accept
 
-router.get('/:id/accept', isAuthenticated, async function (req, res) {
+router.post('/:id/accept', isAuthenticated, async function (req, res) {
   var username = req.username;
   var user, userId, notification, notificationId;
 
@@ -78,7 +78,7 @@ router.get('/:id/accept', isAuthenticated, async function (req, res) {
       event: notification.event,
     });
 
-    return res.status(200).send(JSON.stringify({ data: notification }));
+    return res.status(200).send();
   }
 });
 
