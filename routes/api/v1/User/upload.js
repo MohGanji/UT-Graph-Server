@@ -4,6 +4,7 @@ var User = require('../../../../models/User');
 var config = require('../../../../utils/config');
 var jwt = require('jsonwebtoken');
 var router = express.Router();
+var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
 const fileUpload = require('express-fileupload');
 
 const uuid = require('uuid')
@@ -44,8 +45,11 @@ var upload = multer({
 // });
 
 
-router.post('/', async function (req, res) {
-  // console.log(req.body);
+router.post('/', isAuthenticated, async function (req, res) {
+  let username = req.username;
+  console.log(username);
+  // console.log(req.headers);
+  // console.log(req.query);//username
   upload(req, res, function (err) {
     if (err) {
       console.log(err);
