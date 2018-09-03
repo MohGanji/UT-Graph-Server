@@ -12,39 +12,65 @@ router.get('/:status', isAuthenticated, async function (req, res) {
     var userId = user._id;
     var notifications;
     if (req.params.status == 1)
-      notifications = await Notification.find({ user: userId, read: true });
+      notifications = await Notification.find({ user: user.username, read: false });
     else
-      notifications = await Notification.find({ user: userId });
+      notifications = await Notification.find({ user: user.username });
   } catch (err) {
     return res.status(500).send();
   }
 
   var mappedNotifications = await Promise.all(
-    notifications.map(async function () {
-      return await Notification.toJSON();
+    notifications.map(async function (notif) {
+      return await notif.toJSON();
     }),
   );
 
   res.status(200).send(JSON.stringify({ data: mappedNotifications }));
 });
 
-//   GET /:id/accept
-
-router.get('/:id/accept', isAuthenticated, async function (req, res) {
-  var username = req.username;
+router.post('/read-all', isAuthenticated, async function (req, res) {
+  let username = req.username;
+  console.log(username);
   try {
-    var user = await User.findOne({ username: username });
-    var userId = user._id;
-
-    var notificationId = req.params.id;
-    var notification = await Notification.findById(notificationId);
+    await Notification.update(
+      { user: username },
+      { $set: { read: true } },
+      { "multi": true }
+    );
   } catch (err) {
     return res.status(500).send();
   }
 
-  if (notification.event.organizer != userId) {
+  return res.status(200).send();
+})
+
+//   GET /:id/accept
+
+router.get('/:id/accept', isAuthenticated, async function (req, res) {
+  var username = req.username;
+  var user, userId, notification, notificationId;
+
+  try {
+    user = await User.findOne({ username: username });
+    userId = user._id;
+
+    notificationId = req.params.id;
+    notification = await Notification.findById(notificationId);
+  } catch (err) {
+    return res.status(500).send();
+  }
+
+  if (notification.event.organizer != user.username) {
     return res.status(401).send();
   } else {
+
+    await UserEvent.create({
+      user: notification.applicant,
+      event: notification.event,
+      role: 'STAFF',
+      date: new Date(),
+    });
+
     await Notification.create({
       user: notification.applicant,
       read: false,

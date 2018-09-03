@@ -8,7 +8,7 @@ var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
 var mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator/check');
-let findIdByUsername = require('../../../../utils/findIdByUsename');
+let findIdByUsername = require('../../../../utils/findIdByUsername');
 
 router.get('/', async function (req, res) {
   let pageToken = req.query.pageToken;
@@ -22,10 +22,11 @@ router.get('/', async function (req, res) {
     time = new Date();
   }
 
+  let events;
   try {
-    var events = await Event
-      .find({ "beginTime": { $gt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
-      .sort({ 'date': -1 })
+    events = await Event
+      .find({ "createTime": { $lt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
+      .sort({ 'createTime': -1 })
       .limit(8)
   }
   catch (err) {
@@ -38,8 +39,10 @@ router.get('/', async function (req, res) {
     }),
   );
 
-  let lastPageTime = events[events.length - 1].createTime.getTime().toString();
-  let lastPageToken = await Buffer.from(lastPageTime).toString('base64')
+  let lastPageTime;
+  let lastPageToken;
+  lastPageTime = events[events.length - 1].createTime.getTime().toString();
+  lastPageToken = await Buffer.from(lastPageTime).toString('base64');
 
   res.status(200).send(JSON.stringify({ data: mappedEvents, pageToken: lastPageToken }));
 });
@@ -56,6 +59,8 @@ router.post('/', isAuthenticated, [
       throw new Error('Organizer user not found!');
     }
   }),
+  check('data.beginTime', "Begin time of event is empty!").not().isEmpty(),
+  check('data.endTime', "End time of event is empty!").not().isEmpty()
   // check('data.beginTime').custom(async value => {
   //   let currentTime = new Date();
   //   let beginTime = new Date(value);
@@ -79,9 +84,10 @@ router.post('/', isAuthenticated, [
   let organizer = req.username;
   let description = req.body.data.description;
   let location = req.body.data.location;
-  console.log(req.body.data);
+  let user = await User.findOne({ username: organizer });
+  let userId = user._id;
 
-  await Event.create({
+  let newEvent = await Event.create({
     title: title,
     beginTime: beginTime,
     endTime: endTime,
@@ -90,6 +96,15 @@ router.post('/', isAuthenticated, [
     location: location,
     createTime: createTime
   }).catch(err => res.status(500).send());
+
+  let eventId = newEvent._id;
+
+  await UserEvent.create({
+    user: userId,
+    event: eventId,
+    role: 'ORGANIZER',
+    date: new Date(),
+  });
 
   return res.status(200).send();
 });
@@ -143,26 +158,25 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
   let eventId = req.params.id;
   let event = await Event.findOne({ _id: eventId });
 
+  console.log(event.organizer);
+  console.log(event.title);
+
   await Notification.create({
-    user: findIdByUsername(event.organizer),
+    user: event.organizer,
     read: false,
     type: 'REQUEST',
-    applicant: findIdByUsername(username),
-    event: eventId,
+    applicant: username,
+    event: event.title,
   });
 
-  await UserEvent.create({
-    user: userId,
-    event: eventId,
-    role: 'STAFF',
-    date: new Date(),
-  });
   return res.status(200).send();
 });
 
 router.post('/:id/signup_attendent', isAuthenticated, async function (req, res) {
   let username = req.username;
-  let user = await user.findOne({ username: username });
+  console.log(username);
+  let user = await User.findOne({ username: username });
+  console.log(user.email);
   let userId = user._id;
   let eventId = req.params.id;
 
