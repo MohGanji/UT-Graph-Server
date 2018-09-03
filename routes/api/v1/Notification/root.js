@@ -1,6 +1,8 @@
 var express = require('express');
 var Notification = require('../../../../models/Notification');
 var User = require('../../../../models/User');
+var Event = require('../../../../models/Event');
+var UserEvent = require('../../../../models/UserEvent')
 var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
   .verifyJWTToken;
@@ -47,6 +49,7 @@ router.post('/read-all', isAuthenticated, async function (req, res) {
 router.post('/:id/accept', isAuthenticated, async function (req, res) {
   var username = req.username;
   var user, userId, notification, notificationId;
+  var event;
 
   try {
     user = await User.findOne({ username: username });
@@ -54,17 +57,21 @@ router.post('/:id/accept', isAuthenticated, async function (req, res) {
 
     notificationId = req.params.id;
     notification = await Notification.findById(notificationId);
+    console.log(notification.event);
+    event = await Event.findOne({ title: notification.event });
+    UserApplicant = await User.findOne({ username: notification.applicant });
   } catch (err) {
     return res.status(500).send();
   }
-
-  if (notification.event.organizer != user.username) {
+  console.log(user.username);
+  console.log(event.organizer);
+  if (event.organizer != user.username) {
     return res.status(401).send();
   } else {
 
     await UserEvent.create({
-      user: notification.applicant,
-      event: notification.event,
+      user: UserApplicant,
+      event: event,
       role: 'STAFF',
       date: new Date(),
     });
@@ -90,11 +97,12 @@ router.post('/:id/reject', isAuthenticated, async function (req, res) {
 
     notificationId = req.params.id;
     notification = await Notification.findById(notificationId);
+    event = await Event.findOne({ title: notification.event });
   } catch (err) {
     return res.status(500).send();
   }
 
-  if (notification.event.organizer != user.username) {
+  if (event.organizer != user.username) {
     return res.status(401).send();
   } else {
 
