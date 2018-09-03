@@ -41,7 +41,7 @@ router.get('/', async function (req, res) {
 
   let lastPageTime;
   let lastPageToken;
-  if (events.lentgh > 0) {
+  if (events.length > 0) {
     lastPageTime = events[events.length - 1].createTime.getTime().toString();
     lastPageToken = await Buffer.from(lastPageTime).toString('base64');
   }
@@ -61,8 +61,8 @@ router.post('/', isAuthenticated, [
       throw new Error('Organizer user not found!');
     }
   }),
-  check('data.beginTime', "Begin time of event is empty!").isEmpty(),
-  check('data.endTime', "End time of event is empty!").isEmpty()
+  check('data.beginTime', "Begin time of event is empty!").not().isEmpty(),
+  check('data.endTime', "End time of event is empty!").not().isEmpty()
   // check('data.beginTime').custom(async value => {
   //   let currentTime = new Date();
   //   let beginTime = new Date(value);
@@ -160,12 +160,15 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
   let eventId = req.params.id;
   let event = await Event.findOne({ _id: eventId });
 
+  console.log(event.organizer);
+  console.log(event.title);
+
   await Notification.create({
-    user: await findIdByUsername(event.organizer),
+    user: event.organizer,
     read: false,
     type: 'REQUEST',
-    applicant: await findIdByUsername(username),
-    event: eventId,
+    applicant: username,
+    event: event.title,
   });
 
   return res.status(200).send();
@@ -173,7 +176,9 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
 
 router.post('/:id/signup_attendent', isAuthenticated, async function (req, res) {
   let username = req.username;
-  let user = await user.findOne({ username: username });
+  console.log(username);
+  let user = await User.findOne({ username: username });
+  console.log(user.email);
   let userId = user._id;
   let eventId = req.params.id;
 
