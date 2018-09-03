@@ -44,8 +44,6 @@ router.post('/read-all', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 })
 
-//   GET /:id/accept
-
 router.post('/:id/accept', isAuthenticated, async function (req, res) {
   var username = req.username;
   var user, userId, notification, notificationId;
@@ -75,6 +73,35 @@ router.post('/:id/accept', isAuthenticated, async function (req, res) {
       user: notification.applicant,
       read: false,
       type: 'ACCEPT',
+      event: notification.event,
+    });
+
+    return res.status(200).send();
+  }
+});
+
+router.post('/:id/reject', isAuthenticated, async function (req, res) {
+  var username = req.username;
+  var user, userId, notification, notificationId;
+
+  try {
+    user = await User.findOne({ username: username });
+    userId = user._id;
+
+    notificationId = req.params.id;
+    notification = await Notification.findById(notificationId);
+  } catch (err) {
+    return res.status(500).send();
+  }
+
+  if (notification.event.organizer != user.username) {
+    return res.status(401).send();
+  } else {
+
+    await Notification.create({
+      user: notification.applicant,
+      read: false,
+      type: 'REJECT',
       event: notification.event,
     });
 
