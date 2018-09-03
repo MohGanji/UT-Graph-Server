@@ -15,7 +15,6 @@ var NotificationSchema = mongoose.Schema({
 
 NotificationSchema.methods.toJSON = function () {
   var obj = this.toObject();
-  delete obj._id;
   return obj;
 };
 
