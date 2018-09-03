@@ -4,7 +4,6 @@ var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
 var UserEvent = require('../../../../models/UserEvent');
 let Event = require('../../../../models/Event');
-var mongoose = require('mongoose');
 
 router.get('/', async function (req, res) {
 
@@ -75,7 +74,7 @@ router.put('/', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 });
 
-router.patch('/:activationStatus', isAuthenticated, async function (req, res) { //TODO: add to auth? why not?
+router.patch('/:activationStatus', isAuthenticated, async function (req, res) {
   let username = req.username;
   let activationStatus = req.params.activationStatus;
   let user = await User.findOne({ username: username });

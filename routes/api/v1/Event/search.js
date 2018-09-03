@@ -1,8 +1,6 @@
 var express = require('express');
 var Event = require('../../../../models/Event');
-let UserEvent = require('../../../../models/UserEvent');
 var router = express.Router();
-var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
 
 router.get('/:keyword', async function (req, res) {
   let keyword = req.params.keyword;
