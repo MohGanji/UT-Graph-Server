@@ -46,11 +46,7 @@ router.post('/read-all', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 })
 
-<<<<<<< HEAD
-router.get('/:id/accept', isAuthenticated, async function (req, res) {
-=======
 router.post('/:id/accept', isAuthenticated, async function (req, res) {
->>>>>>> d46b0c5f9c82e52cc498371e2420f669bf7379c5
   var username = req.username;
   var user, userId, notification, notificationId;
   var event;
