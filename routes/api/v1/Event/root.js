@@ -4,13 +4,12 @@ var User = require('../../../../models/User');
 let UserEvent = require('../../../../models/UserEvent');
 let Notification = require('../../../../models/Notification');
 var router = express.Router();
-var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
-  .verifyJWTToken;
+var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
 var mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator/check');
-let findIdByUsername = require('../../../../utils/findIdByUsername');
+var jalaali = require('jalaali-js');
 
-router.get('/', async function (req, res) {
+router.get('/get/:type', async function (req, res) {
   let pageToken = req.query.pageToken;
   let time;
 
@@ -23,13 +22,29 @@ router.get('/', async function (req, res) {
   }
 
   let events;
+  let type = req.params.type;
+  let currentDateObject = jalaali.toJalaali(new Date);
+  let currentDate = new Date(currentDateObject.jy, currentDateObject.jm, currentDateObject.jd);
+  console.log('time:', time);
   try {
-    events = await Event
-      .find({ "createTime": { $lt: time } }) //TODO: change to find({ "createTime": { $gt: time } })
-      .sort({ 'createTime': -1 })
-      .limit(8)
+    if (type === 'old') {
+      events = await Event
+        .find({ "createTime": { $lt: time }, "endTime": { $lt: currentDate } })
+        .sort({ 'createTime': -1 })
+        .limit(8)
+    }
+    else if (type === 'new') {
+      events = await Event
+        .find({ "createTime": { $lt: time }, "endTime": { $gte: currentDate } })
+        .sort({ 'createTime': -1 })
+        .limit(8)
+    }
+    else {
+      return res.status(404).send();
+    }
   }
   catch (err) {
+    console.log(err);
     return res.status(500).send();
   }
 
@@ -43,7 +58,6 @@ router.get('/', async function (req, res) {
   let lastPageToken;
   lastPageTime = events[events.length - 1].createTime.getTime().toString();
   lastPageToken = await Buffer.from(lastPageTime).toString('base64');
-
   res.status(200).send(JSON.stringify({ data: mappedEvents, pageToken: lastPageToken }));
 });
 
@@ -61,13 +75,6 @@ router.post('/', isAuthenticated, [
   }),
   check('data.beginTime', "Begin time of event is empty!").not().isEmpty(),
   check('data.endTime', "End time of event is empty!").not().isEmpty()
-  // check('data.beginTime').custom(async value => {
-  //   let currentTime = new Date();
-  //   let beginTime = new Date(value);
-  //   if (currentTime.getMilliseconds() > beginTime.getMilliseconds()) {
-  //     throw new Error('Beginning time of event is past!');
-  //   }
-  // })
 ], async function (req, res) {
 
   const errors = validationResult(req);
@@ -78,7 +85,7 @@ router.post('/', isAuthenticated, [
   console.log(validationResult(req).array());
 
   let title = req.body.data.title;
-  let beginTime = new Date(req.body.data.beginTime); //ok?
+  let beginTime = new Date(req.body.data.beginTime);
   let endTime = new Date(req.body.data.endTime);
   let createTime = new Date();
   let organizer = req.username;
@@ -128,7 +135,7 @@ router.get('/:id/participants', async function (req, res) {
     docs = await UserEvent.find({ event: eventId });
     users = await Promise.all(
       docs.map(async function (doc) {
-        return await User.findOne({ _id: doc.user }); //is it okay to return user?
+        return await User.findOne({ _id: doc.user });
       }),
     );
     return res.status(200).send(JSON.stringify({ data: users }));
@@ -189,16 +196,4 @@ router.post('/:id/signup_attendent', isAuthenticated, async function (req, res) 
   return res.status(200).send();
 });
 
-// router.delete('/:id', isAuthenticated, async function(req, res) {
-//   let username = req.username;
-//   let id = req.params.id;
-//   let event = await findById(id);
-
-//   if (event.username != username) {
-//     return res.status(401).send();
-//   } else {
-//     await Event.findByIdAndDelete(id);
-//     await UserEvent.remove({ event: event._id });
-//   }
-// });
 module.exports = router;
