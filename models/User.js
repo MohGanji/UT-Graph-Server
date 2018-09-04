@@ -7,6 +7,7 @@ var UserSchema = mongoose.Schema({
   lastName: String,
   email: String,
   sid: String,
+  image: String,
   active: { type: Boolean, default: true }
 });
 

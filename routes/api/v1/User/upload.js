@@ -11,6 +11,8 @@ const uuid = require('uuid')
 const path = require('path');
 var multer = require('multer');
 
+var file_name;
+
 var Storage = multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, path.join(__dirname, "..", "..", "..", "..", "public", "uploads"));
@@ -19,7 +21,8 @@ var Storage = multer.diskStorage({
     console.log(1);
     console.log(file);
     // console.log(req);
-    callback(null, file.fieldname + "_" + uuid.v4() + "_" + file.originalname);
+    file_name = file.fieldname + "_" + uuid.v4() + "_" + file.originalname
+    callback(null, file_name);
   }
 });
 
@@ -28,58 +31,23 @@ var upload = multer({
 })
   .array("file", 5000); //Field name and max count
 
-
-// router.post('/', upload.single('file'), (req, res) => {
-//   console.log("upload!");
-//   res.send();
-//   // upload(req, res, function (err) {
-//   //   if (err) {
-//   //     console.log(err);
-//   //     res.status(300);
-//   //     return res.end("Something went wrong!");
-//   //   }
-//   //   console.log("ok");
-//   //   res.status(200);
-//   //   return res.end("File uploaded sucessfully!.");
-//   // });
-// });
-
-
 router.post('/', isAuthenticated, async function (req, res) {
+  console.log(path.join(__dirname, "..", "..", "..", "..", "public", "uploads"));
   let username = req.username;
   console.log(username);
   // console.log(req.headers);
   // console.log(req.query);//username
-  upload(req, res, function (err) {
+  upload(req, res, async function (err) {
     if (err) {
       console.log(err);
       res.status(300);
       return res.end("Something went wrong!");
     }
+    await User.findOneAndUpdate({ username: username }, { 'image': file_name });
     console.log("ok");
     res.status(200);
     return res.end("File uploaded sucessfully!.");
   });
 });
-// router.use(fileUpload());
-// router.post('/', (req, res, next) => {
-//   console.log(req.body);
-//   // let imageFile = req.body.file;
-//   let imageFile = req.body.file;
-//   console.log("123");
-//   imageFile.mv(path.join(__dirname, "..", "..", "..", "..", "public", "uploads/")
-//     + uuid.v4() + `${req.body.filename}.jpg`, function (err) {
-//       if (err) {
-//         console.log(err);
-//         return res.status(500).send(err);
-//       }
-
-//       res.json({
-//         file: path.join(__dirname, "..", "..", "..", "..", "public", "uploads/")
-//           + `${req.body.filename}.jpg`
-//       });
-//     });
-
-// })
 
 module.exports = router;
