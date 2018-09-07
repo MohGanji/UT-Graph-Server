@@ -60,17 +60,17 @@ router.get('/get/:type', async function (req, res) {
 });
 
 router.post('/', isAuthenticated, [
-  check('data.title', "Event title is too short!").isLength({ min: 6 }),
-  check('data.title', "Event title is too long!").isLength({ max: 64 }),
-  check('data.description', "Event description is too long!").isLength({ max: 1000 }),
+  check('data.title', "نام رویداد باید حداقل ۶ کاراکتر باشد!").isLength({ min: 6 }),
+  check('data.title', "نام رویداد بلندتر از ۶۴ کاراکتر است!").isLength({ max: 64 }),
+  check('data.description', "توضیحات رویداد باید حداکثر ۵۰۰۰ کاراکتر باشد!").isLength({ max: 5000 }),
   check('req.username').custom(async (value, { req }) => {
     let user = await User.findOne({ username: req.username });
     if (!user) {
-      throw new Error('Organizer user not found!');
+      throw new Error('نام کاربری وارد شده یافت نشد!');
     }
   }),
-  check('data.beginTime', "Begin time of event is empty!").not().isEmpty(),
-  check('data.endTime', "End time of event is empty!").not().isEmpty()
+  check('data.beginTime', "فیلد تاریخ شروع رویداد نمی تواند خالی باشد!").not().isEmpty(),
+  check('data.endTime', "فیلد تاریخ پایان رویداد نمی تواند خالی باشد!").not().isEmpty()
 ], async function (req, res) {
 
   const errors = validationResult(req);

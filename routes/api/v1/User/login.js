@@ -13,10 +13,10 @@ router.post('/', [
   check('data.username').custom(async (value, { req }) => {
     let user = await User.findOne({ username: value });
     if (!user) {
-      throw new Error('username not found!');
+      throw new Error('نام کاربری یافت نشد!');
     }
     if (user.password != req.body.data.password) {
-      throw new Error('password is incorrect!');
+      throw new Error('رمز عبور اشتباه است');
     }
   }),
 ], async function (req, res) {

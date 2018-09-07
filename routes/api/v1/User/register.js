@@ -9,24 +9,24 @@ const { check, validationResult } = require('express-validator/check');
 router.post('/', [
   check('data.password')
     .isLength({ min: 6 })
-    .withMessage("password is too short!"),
+    .withMessage("رمز عبور باید حداقل ۶ کاراکتر باشد!"),
   check('data.password')
     .isLength({ max: 32 })
-    .withMessage("password is too long!"),
+    .withMessage("رمز عبور انتخاب شده بلند تر از ۳۲ کراکتر است!"),
   check('data.username').not()
     .isEmpty()
-    .withMessage('Username cannot be empty!'),
-  check('data.email', "email isnot valid!").isEmail(),
+    .withMessage('فیلد نام کاربری نمی تواند خالی باشد!'),
+  check('data.email', "ایمیل وارد شده معتبر نمی باشد!").isEmail(),
   check('data.email').custom(async value => {
     let user = await User.findOne({ email: value });
     if (user) {
-      throw new Error('email already exists');
+      throw new Error('ایمیل وارد شده قبلا در سیستم ثبت شده است!');
     }
   }),
   check('data.username').custom(async value => {
     let user = await User.findOne({ username: value });
     if (user) {
-      throw new Error('username already exists');
+      throw new Error('نام کاربری وارد شده قبلا در سیستم ثبت شده است!');
     }
   })
 ], async function (req, res) {
