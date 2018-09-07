@@ -15,25 +15,6 @@ var app = express();
 // router.use(express.static('public'))
 app.use(express.static(path.join(__dirname, "public", "uploads")))
 
-// sample create models
-app.get('/api/register', async function (req, res) {
-  console.log(req.query);
-  let name = req.query.name;
-  let year = req.query.year;
-  console.log(name);
-  console.log(year);
-  var user = await User.create(
-    {
-      name: name,
-      password: '123',
-    },
-    function (err) {
-      console.log(err);
-    },
-  );
-  res.send('salam');
-});
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

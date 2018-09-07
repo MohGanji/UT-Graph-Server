@@ -21,9 +21,6 @@ var Storage = multer.diskStorage({
     callback(null, dir);
   },
   filename: function (req, file, callback) {
-    console.log(1);
-    console.log(file);
-    // console.log(req);
     file_name = file.fieldname + "_" + uuid.v4() + "_" + file.originalname
     callback(null, file_name);
   }
@@ -42,7 +39,6 @@ router.post('/', isAuthenticated, async function (req, res) {
   // console.log(req.query);//username
   upload(req, res, async function (err) {
     if (err) {
-      console.log(err);
       res.status(300);
       return res.end("Something went wrong!");
     }

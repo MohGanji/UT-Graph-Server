@@ -23,9 +23,7 @@ var Storage = multer.diskStorage({
     callback(null, dir);
   },
   filename: function (req, file, callback) {
-    console.log(1);
-    console.log(file);
-    // console.log(req);
+
     file_name = file.fieldname + "_" + uuid.v4() + "_" + file.originalname
     callback(null, file_name);
   }
@@ -47,7 +45,6 @@ router.post('/upload/:id', isAuthenticated, async function (req, res) {
   console.log(username);
   upload(req, res, async function (err) {
     if (err) {
-      console.log(err);
       res.status(300);
       return res.end("Something went wrong!");
     }
@@ -60,19 +57,13 @@ router.post('/upload/:id', isAuthenticated, async function (req, res) {
 
 
 // router.post('/upload', isAuthenticated, async function (req, res) {
-//   console.log(path.join(__dirname, "..", "..", "..", "..", "public", "uploads"));
 //   let username = req.username;
-//   console.log(username);
-//   // console.log(req.headers);
-//   // console.log(req.query);//username
 //   upload(req, res, async function (err) {
 //     if (err) {
-//       console.log(err);
 //       res.status(300);
 //       return res.end("Something went wrong!");
 //     }
 //     await Event.findOneAndUpdate({ organizer: username }, { 'image': file_name });
-//     console.log("ok");
 //     res.status(200);
 //     return res.end("File uploaded sucessfully!.");
 //   });

@@ -23,11 +23,8 @@ router.post('/', [
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log("error");
-    console.log(errors.array());
     return res.status(422).json({ errors: errors.array() });
   }
-  console.log(validationResult(req).array());
 
   var username = req.body.data.username;
   var password = req.body.data.password;
