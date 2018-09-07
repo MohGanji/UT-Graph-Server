@@ -17,6 +17,4 @@ router.use('/search', search);
 router.use('/upload', upload);
 router.use('/', root);
 
-
-
 module.exports = router;

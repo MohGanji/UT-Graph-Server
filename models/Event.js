@@ -9,6 +9,9 @@ var EventSchema = mongoose.Schema({
   createTime: Date,
   location: String,
   role: String,
+  image: String,
+  // image: { type: Date, default: "default.jpg" },
+  staff: [{ username: String, role: String }]
 });
 
 EventSchema.methods.toJSON = function () {
