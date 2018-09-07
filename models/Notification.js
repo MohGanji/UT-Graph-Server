@@ -12,18 +12,13 @@ var NotificationSchema = mongoose.Schema({
   applicant: String,
   event: String,
   index: Number,
-  hasBottun: { type: Boolean, default: false }
+  hasButton: { type: Boolean, default: false },
+  off: { type: Boolean, default: false }
 });
 
 NotificationSchema.methods.toJSON = function () {
   var obj = this.toObject();
   return obj;
 };
-
-NotificationSchema.pre('save', function (next) {
-  if (this.type == "REQUEST")
-    this.hasBottun = true;
-  next();
-});
 
 module.exports = mongoose.model('Notification', NotificationSchema);

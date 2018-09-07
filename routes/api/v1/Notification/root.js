@@ -56,7 +56,8 @@ router.post('/:id/accept', isAuthenticated, async function (req, res) {
     userId = user._id;
 
     notificationId = req.params.id;
-    notification = await Notification.findById(notificationId);
+    notification = await Notification.findOneAndUpdate(
+      { _id: notificationId }, { $set: { hasButton: false, off: true } });
 
     event = await Event.findOne({ title: notification.event });
     UserApplicant = await User.findOne({ username: notification.applicant });
@@ -83,8 +84,6 @@ router.post('/:id/accept', isAuthenticated, async function (req, res) {
       index: await Notification.find({}).count()
     });
 
-    hasBottun = false;
-
     return res.status(200).send();
   }
 });
@@ -98,7 +97,8 @@ router.post('/:id/reject', isAuthenticated, async function (req, res) {
     userId = user._id;
 
     notificationId = req.params.id;
-    notification = await Notification.findById(notificationId);
+    notification = await Notification.findOneAndUpdate(
+      { _id: notificationId }, { $set: { hasButton: false, off: true } });
     event = await Event.findOne({ title: notification.event });
   } catch (err) {
     return res.status(500).send();
@@ -115,8 +115,6 @@ router.post('/:id/reject', isAuthenticated, async function (req, res) {
       event: notification.event,
       index: await Notification.find({}).count()
     });
-
-    hasBottun = false;
 
     return res.status(200).send();
   }
