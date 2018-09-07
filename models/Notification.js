@@ -11,7 +11,9 @@ var NotificationSchema = mongoose.Schema({
   },
   applicant: String,
   event: String,
-  index: Number
+  index: Number,
+  hasButton: { type: Boolean, default: false },
+  off: { type: Boolean, default: false }
 });
 
 NotificationSchema.methods.toJSON = function () {

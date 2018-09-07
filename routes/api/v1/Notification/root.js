@@ -56,15 +56,15 @@ router.post('/:id/accept', isAuthenticated, async function (req, res) {
     userId = user._id;
 
     notificationId = req.params.id;
-    notification = await Notification.findById(notificationId);
-    console.log(notification.event);
+    notification = await Notification.findOneAndUpdate(
+      { _id: notificationId }, { $set: { hasButton: false, off: true } });
+
     event = await Event.findOne({ title: notification.event });
     UserApplicant = await User.findOne({ username: notification.applicant });
   } catch (err) {
     return res.status(500).send();
   }
-  console.log(user.username);
-  console.log(event.organizer);
+
   if (event.organizer != user.username) {
     return res.status(401).send();
   } else {
@@ -97,7 +97,8 @@ router.post('/:id/reject', isAuthenticated, async function (req, res) {
     userId = user._id;
 
     notificationId = req.params.id;
-    notification = await Notification.findById(notificationId);
+    notification = await Notification.findOneAndUpdate(
+      { _id: notificationId }, { $set: { hasButton: false, off: true } });
     event = await Event.findOne({ title: notification.event });
   } catch (err) {
     return res.status(500).send();

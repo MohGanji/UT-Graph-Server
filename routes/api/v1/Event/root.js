@@ -174,6 +174,7 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
     user: event.organizer,
     read: false,
     type: 'REQUEST',
+    hasButton: true,
     applicant: username,
     event: event.title,
     index: await Notification.find({}).count()
