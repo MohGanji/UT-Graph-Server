@@ -11,11 +11,16 @@ var NotificationSchema = mongoose.Schema({
   },
   applicant: String,
   event: String,
-  index: Number
+  index: Number,
+  hasBottun: Boolean
 });
 
 NotificationSchema.methods.toJSON = function () {
   var obj = this.toObject();
+  if (obj.type == "REQUEST")
+    obj.hasBottun = true;
+  else
+    obj.hasBottun = false;
   return obj;
 };
 
