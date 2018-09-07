@@ -8,7 +8,11 @@ var UserSchema = mongoose.Schema({
   email: String,
   sid: String,
   image: String,
-  active: { type: Boolean, default: true }
+  active: { type: Boolean, default: true },
+  role: {
+    type: String,
+    enum: ["USER", "ADMIN"]
+  }
 });
 
 UserSchema.methods.toJSON = function () {

@@ -39,6 +39,7 @@ router.post('/', [
   console.log(validationResult(req).array());
   let username = req.body.data.username;
   let newUser = req.body.data;
+  newUser.role = "USER";
   newUser.image = "default.jpg";
   try {
     await User.create(newUser)
