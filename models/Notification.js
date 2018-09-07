@@ -11,6 +11,7 @@ var NotificationSchema = mongoose.Schema({
   },
   applicant: String,
   event: String,
+  index: Number
 });
 
 NotificationSchema.methods.toJSON = function () {

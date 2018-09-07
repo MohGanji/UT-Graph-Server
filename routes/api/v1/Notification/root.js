@@ -81,6 +81,7 @@ router.post('/:id/accept', isAuthenticated, async function (req, res) {
       read: false,
       type: 'ACCEPT',
       event: notification.event,
+      index: await Notification.find({}).count()
     });
 
     return res.status(200).send();
@@ -111,6 +112,7 @@ router.post('/:id/reject', isAuthenticated, async function (req, res) {
       read: false,
       type: 'REJECT',
       event: notification.event,
+      index: await Notification.find({}).count()
     });
 
     return res.status(200).send();
