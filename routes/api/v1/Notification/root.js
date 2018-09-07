@@ -57,14 +57,13 @@ router.post('/:id/accept', isAuthenticated, async function (req, res) {
 
     notificationId = req.params.id;
     notification = await Notification.findById(notificationId);
-    console.log(notification.event);
+
     event = await Event.findOne({ title: notification.event });
     UserApplicant = await User.findOne({ username: notification.applicant });
   } catch (err) {
     return res.status(500).send();
   }
-  console.log(user.username);
-  console.log(event.organizer);
+
   if (event.organizer != user.username) {
     return res.status(401).send();
   } else {
@@ -83,6 +82,8 @@ router.post('/:id/accept', isAuthenticated, async function (req, res) {
       event: notification.event,
       index: await Notification.find({}).count()
     });
+
+    hasBottun = false;
 
     return res.status(200).send();
   }
@@ -114,6 +115,8 @@ router.post('/:id/reject', isAuthenticated, async function (req, res) {
       event: notification.event,
       index: await Notification.find({}).count()
     });
+
+    hasBottun = false;
 
     return res.status(200).send();
   }
