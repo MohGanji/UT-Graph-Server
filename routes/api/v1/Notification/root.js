@@ -32,7 +32,6 @@ router.get('/:status', isAuthenticated, async function (req, res) {
 
 router.post('/read-all', isAuthenticated, async function (req, res) {
   let username = req.username;
-  console.log(username);
   try {
     await Notification.update(
       { user: username },

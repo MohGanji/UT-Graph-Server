@@ -33,10 +33,8 @@ router.post('/', [
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log("error");
     return res.status(422).json({ errors: errors.array() });
   }
-  console.log(validationResult(req).array());
   let username = req.body.data.username;
   let newUser = req.body.data;
   newUser.role = "USER";
@@ -44,7 +42,6 @@ router.post('/', [
   try {
     await User.create(newUser)
   } catch (err) {
-    console.log(err);
     return res.status(500).send();
   }
 

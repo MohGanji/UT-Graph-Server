@@ -25,7 +25,6 @@ router.get('/get/:type', async function (req, res) {
   let type = req.params.type;
   let currentDateObject = jalaali.toJalaali(new Date);
   let currentDate = new Date(currentDateObject.jy, currentDateObject.jm, currentDateObject.jd);
-  console.log('time:', time);
   try {
     if (type === 'old') {
       events = await Event
@@ -44,7 +43,6 @@ router.get('/get/:type', async function (req, res) {
     }
   }
   catch (err) {
-    console.log(err);
     return res.status(500).send();
   }
 
@@ -66,8 +64,6 @@ router.post('/', isAuthenticated, [
   check('data.title', "Event title is too long!").isLength({ max: 64 }),
   check('data.description', "Event description is too long!").isLength({ max: 1000 }),
   check('req.username').custom(async (value, { req }) => {
-    console.log(req.username);
-    console.log(value);
     let user = await User.findOne({ username: req.username });
     if (!user) {
       throw new Error('Organizer user not found!');
@@ -79,10 +75,8 @@ router.post('/', isAuthenticated, [
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log("error");
     return res.status(422).json({ errors: errors.array() });
   }
-  console.log(validationResult(req).array());
 
   let title = req.body.data.title;
   let beginTime = new Date(req.body.data.beginTime);
@@ -113,7 +107,6 @@ router.post('/', isAuthenticated, [
     role: 'ORGANIZER',
     date: new Date(),
   });
-  console.log("crt");
 
   return res.status(200).send(JSON.stringify({ data: eventId }));
 });
@@ -167,9 +160,6 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
   let eventId = req.params.id;
   let event = await Event.findOne({ _id: eventId });
 
-  console.log(event.organizer);
-  console.log(event.title);
-
   await Notification.create({
     user: event.organizer,
     read: false,
@@ -185,9 +175,7 @@ router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {
 
 router.post('/:id/signup_attendent', isAuthenticated, async function (req, res) {
   let username = req.username;
-  console.log(username);
   let user = await User.findOne({ username: username });
-  console.log(user.email);
   let userId = user._id;
   let eventId = req.params.id;
 

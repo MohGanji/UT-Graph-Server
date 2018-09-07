@@ -20,8 +20,7 @@ describe('Test the event roots', () => {
     () => {
       request(app)
         .get('/api/v1/event')
-        .end(function(err, res) {
-          console.log(res.body);
+        .end(function (err, res) {
           // expect(res.data)
           expect(res.statusCode).toEqual(200);
           done();
