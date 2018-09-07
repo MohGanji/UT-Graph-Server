@@ -101,7 +101,8 @@ router.post('/', isAuthenticated, [
     organizer: organizer,
     description: description,
     location: location,
-    createTime: createTime
+    createTime: createTime,
+    image: "default.jpg"
   }).catch(err => res.status(500).send());
 
   let eventId = newEvent._id;
@@ -112,6 +113,21 @@ router.post('/', isAuthenticated, [
     role: 'ORGANIZER',
     date: new Date(),
   });
+  console.log("crt");
+
+  return res.status(200).send(JSON.stringify({ data: eventId }));
+});
+
+router.put('/:id', isAuthenticated, async function (req, res) {
+  var id = req.params.id;
+  var event = await Event.findById(id);
+  var updatedEvent = req.body.data;
+
+  if (event.organizer != req.username) {
+    return res.status(401).send();
+  }
+
+  await Event.findByIdAndUpdate(id, { $set: updatedEvent });
 
   return res.status(200).send();
 });
@@ -142,20 +158,6 @@ router.get('/:id/participants', async function (req, res) {
   } catch (err) {
     return res.status(500);
   }
-});
-
-router.put('/:id', isAuthenticated, async function (req, res) {
-  var id = req.params.id;
-  var event = await Event.findById(id);
-  var updatedEvent = req.body.data;
-
-  if (event.organizer != req.username) {
-    return res.status(401).send();
-  }
-
-  await Event.findByIdAndUpdate(id, { $set: updatedEvent });
-
-  return res.status(200).send();
 });
 
 router.post('/:id/signup_staff', isAuthenticated, async function (req, res) {

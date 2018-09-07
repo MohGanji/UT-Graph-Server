@@ -35,6 +35,23 @@ router.get('/:id', async function (req, res) {
     return res.status(404).send();
   }
 });
+router.get('/get_image/:id', async function (req, res) {
+  let username = req.params.id;
+
+  try {
+    var user = await User.findOne({ username: username });
+  } catch (err) {
+    return res.status(500).send();
+  }
+
+  if (user) {
+    return res.status(200).send(JSON.stringify({ image: user.image }));
+  }
+  else {
+    return res.status(404).send();
+  }
+});
+
 
 router.get('/:id/events', async function (req, res) {
   let username = req.params.id;
