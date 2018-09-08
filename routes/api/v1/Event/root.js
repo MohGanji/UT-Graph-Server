@@ -24,7 +24,8 @@ router.get('/get/:type', async function (req, res) {
   let events;
   let type = req.params.type;
   let currentDateObject = jalaali.toJalaali(new Date);
-  let currentDate = new Date(currentDateObject.jy, currentDateObject.jm, currentDateObject.jd);
+  let currentDate = new Date(currentDateObject.jy, currentDateObject.jm - 1, currentDateObject.jd - 1);
+
   try {
     if (type === 'old') {
       events = await Event
@@ -54,8 +55,10 @@ router.get('/get/:type', async function (req, res) {
 
   let lastPageTime;
   let lastPageToken;
-  lastPageTime = events[events.length - 1].createTime.getTime().toString();
-  lastPageToken = await Buffer.from(lastPageTime).toString('base64');
+  if (events.length !== 0) {
+    lastPageTime = events[events.length - 1].createTime.getTime().toString();
+    lastPageToken = await Buffer.from(lastPageTime).toString('base64');
+  }
   res.status(200).send(JSON.stringify({ data: mappedEvents, pageToken: lastPageToken }));
 });
 
