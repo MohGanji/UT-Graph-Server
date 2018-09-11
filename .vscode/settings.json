@@ -4,7 +4,7 @@
   "prettier.semi": true,
   "prettier.tabWidth": 2,
   "prettier.trailingComma": "all",
-  "prettier.eslintIntegration": false,
+  "prettier.eslintIntegration": true,
   "editor.formatOnSave": true,
   "files.eol": "\n",
   "files.exclude": {

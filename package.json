@@ -3,16 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "PORT=8080 node ./bin/www",
+    "start": "PORT=8080 NODE_ENV='development' PUBLIC_URL='http://localhost:8080/public/' node ./bin/www",
     "test": "jest --runInBand --forceExit -b"
   },
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.17.2",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "debug": "~2.6.3",
     "ejs": "^2.6.1",
+    "eslint": "^5.5.0",
     "express": "~4.15.2",
     "express-fileupload": "^0.4.0",
     "express-validation": "^1.0.2",
