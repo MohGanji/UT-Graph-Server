@@ -1,25 +1,27 @@
 var express = require('express');
 var User = require('../../../../models/User');
 var router = express.Router();
-var isAuthenticated = require('../../../../middlewares/verifyJWTToken').verifyJWTToken;
+var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
+  .verifyJWTToken;
 var UserEvent = require('../../../../models/UserEvent');
 let Event = require('../../../../models/Event');
 
-router.get('/', async function (req, res) {
-
+router.get('/', async function(req, res) {
   try {
     var users = await User.find({});
   } catch (err) {
     return res.status(500).send();
   }
-  var mappedUsers = await Promise.all(users.map(async function (user) {
-    return await user.toJSON();
-  }));
+  var mappedUsers = await Promise.all(
+    users.map(async function(user) {
+      return await user.toJSON();
+    }),
+  );
 
   res.status(200).send(JSON.stringify({ data: mappedUsers }));
 });
 
-router.get('/:id', async function (req, res) {
+router.get('/:id', async function(req, res) {
   let username = req.params.id;
 
   try {
@@ -30,14 +32,15 @@ router.get('/:id', async function (req, res) {
 
   if (user) {
     return res.status(200).send(JSON.stringify({ data: user.toJSON() }));
-  }
-  else {
+  } else {
     return res.status(404).send();
   }
 });
-router.get('/get_image/:id', async function (req, res) {
+router.get('/get_image/:id', async function(req, res) {
   let username = req.params.id;
-
+  console.log('getimage::::');
+  console.log(process.env);
+  console.log(process.env.PUBLIC_URL);
   try {
     var user = await User.findOne({ username: username });
   } catch (err) {
@@ -46,14 +49,12 @@ router.get('/get_image/:id', async function (req, res) {
 
   if (user) {
     return res.status(200).send(JSON.stringify({ image: user.image }));
-  }
-  else {
+  } else {
     return res.status(404).send();
   }
 });
 
-
-router.get('/:id/events', async function (req, res) {
+router.get('/:id/events', async function(req, res) {
   let username = req.params.id;
   let user = await User.findOne({ username: username });
 
@@ -67,23 +68,20 @@ router.get('/:id/events', async function (req, res) {
   try {
     docs = await UserEvent.find({ user: userId });
     events = await Promise.all(
-      docs.map(async function (doc) {
+      docs.map(async function(doc) {
         let event = await Event.findOne({ _id: doc.event });
         event.role = doc.role;
         return event;
       }),
     );
-  }
-  catch (err) {
+  } catch (err) {
     return res.status(500);
-  }
-  finally {
+  } finally {
     return res.status(200).send(JSON.stringify({ data: events }));
   }
-
 });
 
-router.put('/', isAuthenticated, async function (req, res) {
+router.put('/', isAuthenticated, async function(req, res) {
   let username = req.username;
   let updatedUser = req.body.data;
 
@@ -91,18 +89,16 @@ router.put('/', isAuthenticated, async function (req, res) {
   return res.status(200).send();
 });
 
-router.patch('/:activationStatus', isAuthenticated, async function (req, res) {
+router.patch('/:activationStatus', isAuthenticated, async function(req, res) {
   let username = req.username;
   let activationStatus = req.params.activationStatus;
   let user = await User.findOne({ username: username });
 
   if (activationStatus == 'active') {
     user.active = true;
-  }
-  else if (activationStatus == 'deactive') {
+  } else if (activationStatus == 'deactive') {
     user.active = false;
-  }
-  else {
+  } else {
     return res.status(404).send();
   }
   await user.save();
