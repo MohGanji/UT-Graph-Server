@@ -43,7 +43,7 @@ router.post(
     newUser.role;
     if (isAdmin(username)) newUser.role = 'ADMIN';
     else newUser.role = 'USER';
-    console.log(newUser.role);
+    // console.log(newUser.role);
     newUser.image = 'default.jpg';
     try {
       await User.create(newUser);
