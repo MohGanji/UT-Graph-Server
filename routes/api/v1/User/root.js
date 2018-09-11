@@ -6,6 +6,8 @@ var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
 var UserEvent = require('../../../../models/UserEvent');
 let Event = require('../../../../models/Event');
 
+var normalizeImage = require('../../../../utils/normalizeImage');
+
 router.get('/', async function(req, res) {
   try {
     var users = await User.find({});
@@ -14,7 +16,7 @@ router.get('/', async function(req, res) {
   }
   var mappedUsers = await Promise.all(
     users.map(async function(user) {
-      return await user.toJSON();
+      return await normalizeImage(user.toJSON());
     }),
   );
 
@@ -31,16 +33,17 @@ router.get('/:id', async function(req, res) {
   }
 
   if (user) {
-    return res.status(200).send(JSON.stringify({ data: user.toJSON() }));
+    normalizeImage(user.toJSON());
+    return res
+      .status(200)
+      .send(JSON.stringify({ data: await normalizeImage(user.toJSON()) }));
   } else {
     return res.status(404).send();
   }
 });
 router.get('/get_image/:id', async function(req, res) {
   let username = req.params.id;
-  console.log('getimage::::');
-  console.log(process.env);
-  console.log(process.env.PUBLIC_URL);
+
   try {
     var user = await User.findOne({ username: username });
   } catch (err) {
@@ -48,7 +51,9 @@ router.get('/get_image/:id', async function(req, res) {
   }
 
   if (user) {
-    return res.status(200).send(JSON.stringify({ image: user.image }));
+    return res
+      .status(200)
+      .send(JSON.stringify({ image: process.env.PUBLIC_URL + user.image }));
   } else {
     return res.status(404).send();
   }
@@ -71,7 +76,7 @@ router.get('/:id/events', async function(req, res) {
       docs.map(async function(doc) {
         let event = await Event.findOne({ _id: doc.event });
         event.role = doc.role;
-        return event;
+        return await normalizeImage(event);
       }),
     );
   } catch (err) {
