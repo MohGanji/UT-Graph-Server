@@ -44,12 +44,6 @@ router.post(
     let username = req.body.data.username;
     let password = req.body.data.password;
     let newUser = req.body.data;
-<<<<<<< HEAD
-    newUser.role;
-    if (isAdmin(username)) newUser.role = 'ADMIN';
-    else newUser.role = 'USER';
-    // console.log(newUser.role);
-=======
 
     newUser.password = await bcrypt.hash(password, config.saltRounds);
 
@@ -58,7 +52,6 @@ router.post(
     } else {
       newUser.role = 'USER';
     }
->>>>>>> 4481d55a31f7ec91be1c6b0a01f06331252d1756
     newUser.image = 'default.jpg';
     try {
       await User.create(newUser);

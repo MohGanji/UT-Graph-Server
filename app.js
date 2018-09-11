@@ -13,11 +13,7 @@ const User = require('./models/User');
 var app = express();
 // router.use('/public', express.static(__dirname + '/public'));
 // router.use(express.static('public'))
-<<<<<<< HEAD
-app.use('/public', express.static(path.join(__dirname, 'public', 'uploads')));
-=======
 app.use('/public',express.static(path.join(__dirname, "public", "uploads")))
->>>>>>> 4481d55a31f7ec91be1c6b0a01f06331252d1756
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
