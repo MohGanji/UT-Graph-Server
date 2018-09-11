@@ -31,7 +31,6 @@ router.post(
     check('data.username').custom(async value => {
       let user = await User.findOne({ username: value });
       if (user) {
-        password;
         throw new Error('نام کاربری وارد شده قبلا در سیستم ثبت شده است!');
       }
     }),
