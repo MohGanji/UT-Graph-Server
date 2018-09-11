@@ -47,6 +47,9 @@ router.post('/upload/:id', isAuthenticated, async function(req, res) {
     'uploads',
     username,
   );
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
 
   console.log(username);
   console.log(username);
