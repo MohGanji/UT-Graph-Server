@@ -26,7 +26,7 @@ describe('Test the event roots', () => {
           done();
         });
     },
-    30000,
+    30000
   );
 
   afterAll(async () => {
