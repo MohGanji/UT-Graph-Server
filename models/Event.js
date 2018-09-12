@@ -9,11 +9,8 @@ var EventSchema = mongoose.Schema({
   description: String,
   createTime: Date,
   location: String,
-  role: String,
   image: String,
-  isPassed: Boolean,
-  // image: { type: Date, default: "default.jpg" },
-  staff: [{ username: String, role: String }]
+  isPassed: Boolean
 });
 
 EventSchema.methods.toJSON = function () {
@@ -23,12 +20,19 @@ EventSchema.methods.toJSON = function () {
 };
 
 EventSchema.post('init', doc => {
-  let currentDateObject = jalaali.toJalaali(new Date);
-  let currentDate = new Date(currentDateObject.jy, currentDateObject.jm - 1, currentDateObject.jd - 1, 0, 0, 0, 0);
+  let currentDateObject = jalaali.toJalaali(new Date());
+  let currentDate = new Date(
+    currentDateObject.jy,
+    currentDateObject.jm - 1,
+    currentDateObject.jd - 1,
+    0,
+    0,
+    0,
+    0
+  );
   if (doc.endTime >= currentDate) {
     doc.isPassed = false;
-  }
-  else {
+  } else {
     doc.isPassed = true;
   }
 });

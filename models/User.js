@@ -11,7 +11,7 @@ var UserSchema = mongoose.Schema({
   active: { type: Boolean, default: true },
   role: {
     type: String,
-    enum: ["USER", "ADMIN"]
+    enum: ['USER', 'ADMIN']
   }
 });
 

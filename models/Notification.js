@@ -7,7 +7,7 @@ var NotificationSchema = mongoose.Schema({
   read: Boolean,
   type: {
     type: String,
-    enum: ['REQUEST', 'ACCEPT', 'REJECT', 'INFORMATION'],
+    enum: ['REQUEST', 'ACCEPT', 'REJECT', 'INFORMATION']
   },
   applicant: String,
   event: String,
