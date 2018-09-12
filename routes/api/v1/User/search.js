@@ -1,39 +1,7 @@
 var express = require('express');
-var User = require('../../../../models/User');
-var normalizeImage = require('../../../../utils/normalizeImage');
-
 var router = express.Router();
+var searchController = require('../../../../controllers/User/searchController');
 
-router.get('/:keyword', async function(req, res) {
-  let keyword = req.params.keyword;
-  let docs;
-
-  if (keyword.length < 2) {
-    return res.status(404).send();
-  }
-
-  try {
-    docs = await User.find({
-      $or: [
-        { firstName: { $regex: '.*' + keyword + '.*' } },
-        { lastName: { $regex: '.*' + keyword + '.*' } },
-        { username: { $regex: '.*' + keyword + '.*' } },
-      ],
-    });
-  } catch (err) {
-    return res.status(500).send();
-  }
-
-  if (docs.length == 0) {
-    return res.status(404).send();
-  } else {
-    var mappedDocs = await Promise.all(
-      docs.map(async function(doc) {
-        return await normalizeImage(doc.toJSON());
-      }),
-    );
-    return res.status(200).send(JSON.stringify({ data: mappedDocs }));
-  }
-});
+router.get('/:keyword', searchController.searchUser);
 
 module.exports = router;

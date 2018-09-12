@@ -1,0 +1,118 @@
+var Notification = require('../../models/Notification');
+var User = require('../../models/User');
+var Event = require('../../models/Event');
+var UserEvent = require('../../models/UserEvent');
+
+exports.acceptById = async function(req, res) {
+  var username = req.username;
+  var user, userId, notification, notificationId;
+  var event;
+
+  try {
+    user = await User.findOne({ username: username });
+    userId = user._id;
+
+    notificationId = req.params.id;
+    notification = await Notification.findOneAndUpdate(
+      { _id: notificationId },
+      { $set: { hasButton: false, off: true } },
+    );
+
+    event = await Event.findOne({ title: notification.event });
+    UserApplicant = await User.findOne({ username: notification.applicant });
+  } catch (err) {
+    return res.status(500).send();
+  }
+
+  if (event.organizer != user.username) {
+    return res.status(401).send();
+  } else {
+    await UserEvent.create({
+      user: UserApplicant,
+      event: event,
+      role: 'STAFF',
+      date: new Date(),
+    });
+
+    await Notification.create({
+      user: notification.applicant,
+      read: false,
+      type: 'ACCEPT',
+      event: notification.event,
+      index: await Notification.find({}).count(),
+    });
+
+    return res.status(200).send();
+  }
+};
+
+exports.rejectById = async function(req, res) {
+  var username = req.username;
+  var user, userId, notification, notificationId;
+
+  try {
+    user = await User.findOne({ username: username });
+    userId = user._id;
+
+    notificationId = req.params.id;
+    notification = await Notification.findOneAndUpdate(
+      { _id: notificationId },
+      { $set: { hasButton: false, off: true } },
+    );
+    event = await Event.findOne({ title: notification.event });
+  } catch (err) {
+    return res.status(500).send();
+  }
+
+  if (event.organizer != user.username) {
+    return res.status(401).send();
+  } else {
+    await Notification.create({
+      user: notification.applicant,
+      read: false,
+      type: 'REJECT',
+      event: notification.event,
+      index: await Notification.find({}).count(),
+    });
+
+    return res.status(200).send();
+  }
+};
+
+exports.getNotificationById = async function(req, res) {
+  var username = req.username;
+  try {
+    var user = await User.findOne({ username: username });
+    var userId = user._id;
+
+    var notificationId = req.params.id;
+    var notification = await Notification.findById(notificationId);
+  } catch (err) {
+    return res.status(500).send();
+  }
+
+  if (notification.user != userId) {
+    return res.status(401).send();
+  } else {
+    return res.status(200).send(JSON.stringify({ data: notification }));
+  }
+};
+
+// exports.deleteNotificationById = async function(req, res) {
+//   var username = req.username;
+//   var user = await User.findOne({ username: username }).catch(err =>
+//     res.status(500).send(),
+//   );
+//   var userId = user._id;
+//   var notificationId = req.params.id;
+
+//   var notification = await Notification.findById(notificationId).catch(err =>
+//     res.status(500).send(),
+//   );
+//   if (notification.user != userId) {
+//     return res.status(401).send();
+//   } else {
+//     await notification.remove(); //does it work correctly?
+//     return res.status(200).send(JSON.stringify({ data: notification }));
+//   }
+// };
