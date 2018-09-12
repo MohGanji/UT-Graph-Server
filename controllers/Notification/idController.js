@@ -3,7 +3,7 @@ var User = require('../../models/User');
 var Event = require('../../models/Event');
 var UserEvent = require('../../models/UserEvent');
 
-exports.acceptById = async function(req, res) {
+exports.acceptById = async function (req, res) {
   var username = req.username;
   var user, userId, notification, notificationId;
   var event;
@@ -15,7 +15,7 @@ exports.acceptById = async function(req, res) {
     notificationId = req.params.id;
     notification = await Notification.findOneAndUpdate(
       { _id: notificationId },
-      { $set: { hasButton: false, off: true } },
+      { $set: { hasButton: false, off: true } }
     );
 
     event = await Event.findOne({ title: notification.event });
@@ -31,7 +31,7 @@ exports.acceptById = async function(req, res) {
       user: UserApplicant,
       event: event,
       role: 'STAFF',
-      date: new Date(),
+      date: new Date()
     });
 
     await Notification.create({
@@ -39,14 +39,14 @@ exports.acceptById = async function(req, res) {
       read: false,
       type: 'ACCEPT',
       event: notification.event,
-      index: await Notification.find({}).count(),
+      index: await Notification.find({}).count()
     });
 
     return res.status(200).send();
   }
 };
 
-exports.rejectById = async function(req, res) {
+exports.rejectById = async function (req, res) {
   var username = req.username;
   var user, userId, notification, notificationId;
 
@@ -57,7 +57,7 @@ exports.rejectById = async function(req, res) {
     notificationId = req.params.id;
     notification = await Notification.findOneAndUpdate(
       { _id: notificationId },
-      { $set: { hasButton: false, off: true } },
+      { $set: { hasButton: false, off: true } }
     );
     event = await Event.findOne({ title: notification.event });
   } catch (err) {
@@ -72,14 +72,15 @@ exports.rejectById = async function(req, res) {
       read: false,
       type: 'REJECT',
       event: notification.event,
-      index: await Notification.find({}).count(),
+      index: await Notification.find({}).count()
     });
 
     return res.status(200).send();
   }
 };
 
-exports.getNotificationById = async function(req, res) {
+exports.getNotificationById = async function (req, res) {
+  // @hadi Are you aware that this function never ever executes??
   var username = req.username;
   try {
     var user = await User.findOne({ username: username });
