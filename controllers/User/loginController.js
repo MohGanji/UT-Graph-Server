@@ -1,11 +1,11 @@
 var config = require('../../utils/config');
 var jwt = require('jsonwebtoken');
 
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 
 var secret = config.secret;
 
-exports.login = async function(req, res) {
+exports.login = async function (req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
@@ -13,14 +13,14 @@ exports.login = async function(req, res) {
   let username = req.body.data.username;
   let authenticationObj = {
     data: {
-      token: '',
-    },
+      token: ''
+    }
   };
   authenticationObj.data.token = jwt.sign(
     {
-      username: username,
+      username: username
     },
-    secret,
+    secret
   );
   return res.json(authenticationObj);
 };

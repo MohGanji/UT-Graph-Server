@@ -2,9 +2,9 @@ var User = require('../../models/User');
 var isAdmin = require('../../utils/isAdmin');
 const bcrypt = require('bcrypt');
 const config = require('../../utils/config');
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 
-exports.registerUser = async function(req, res) {
+exports.registerUser = async function (req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });

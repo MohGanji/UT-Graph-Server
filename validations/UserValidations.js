@@ -1,6 +1,6 @@
 var User = require('../models/User');
 const bcrypt = require('bcrypt');
-const { check, validationResult } = require('express-validator/check');
+const { check } = require('express-validator/check');
 
 exports.login = [
   check('data.username').custom(async (value, { req }) => {
@@ -8,7 +8,7 @@ exports.login = [
     if (user) {
       let isPasswordCorrect = await bcrypt.compare(
         req.body.data.password,
-        user.password,
+        user.password
       );
       if (!isPasswordCorrect) {
         throw new Error('نام کاربری یا رمز عبور اشتباه است!');
@@ -16,7 +16,7 @@ exports.login = [
     } else {
       throw new Error('نام کاربری یا رمر عبور اشتباه است!');
     }
-  }),
+  })
 ];
 
 exports.register = [
@@ -42,5 +42,5 @@ exports.register = [
     if (user) {
       throw new Error('نام کاربری وارد شده قبلا در سیستم ثبت شده است!');
     }
-  }),
+  })
 ];

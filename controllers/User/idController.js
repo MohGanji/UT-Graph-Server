@@ -3,7 +3,7 @@ var UserEvent = require('../../models/UserEvent');
 let Event = require('../../models/Event');
 var normalizeImage = require('../../utils/normalizeImage');
 
-exports.getUserByUsername = async function(req, res) {
+exports.getUserByUsername = async function (req, res) {
   let username = req.params.id;
 
   try {
@@ -22,7 +22,7 @@ exports.getUserByUsername = async function(req, res) {
   }
 };
 
-exports.getUserEvents = async function(req, res) {
+exports.getUserEvents = async function (req, res) {
   let username = req.params.id;
   let user = await User.findOne({ username: username });
 
@@ -36,15 +36,14 @@ exports.getUserEvents = async function(req, res) {
   try {
     docs = await UserEvent.find({ user: userId });
     events = await Promise.all(
-      docs.map(async function(doc) {
+      docs.map(async function (doc) {
         let event = await Event.findOne({ _id: doc.event });
         event.role = doc.role;
-        return await normalizeImage(event);
-      }),
+        return normalizeImage(event);
+      })
     );
   } catch (err) {
-    return res.status(500);
-  } finally {
-    return res.status(200).send(JSON.stringify({ data: events }));
+    return res.status(500).send();
   }
+  return res.status(200).send(JSON.stringify({ data: events }));
 };
