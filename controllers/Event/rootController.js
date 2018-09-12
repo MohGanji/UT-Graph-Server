@@ -3,9 +3,9 @@ var User = require('../../models/User');
 let UserEvent = require('../../models/UserEvent');
 var jalaali = require('jalaali-js');
 var normalizeImage = require('../../utils/normalizeImage');
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 
-exports.get_events_by_type = async function(req, res) {
+exports.getEventsByType = async function (req, res) {
   let pageToken = req.query.pageToken;
   let time;
 
@@ -23,21 +23,21 @@ exports.get_events_by_type = async function(req, res) {
   let currentDate = new Date(
     currentDateObject.jy,
     currentDateObject.jm - 1,
-    currentDateObject.jd - 1,
+    currentDateObject.jd - 1
   );
 
   try {
     if (type === 'old') {
       events = await Event.find({
         createTime: { $lt: time },
-        endTime: { $lt: currentDate },
+        endTime: { $lt: currentDate }
       })
         .sort({ createTime: -1 })
         .limit(8);
     } else if (type === 'new') {
       events = await Event.find({
         createTime: { $lt: time },
-        endTime: { $gte: currentDate },
+        endTime: { $gte: currentDate }
       })
         .sort({ createTime: -1 })
         .limit(8);
@@ -49,9 +49,9 @@ exports.get_events_by_type = async function(req, res) {
   }
 
   var mappedEvents = await Promise.all(
-    events.map(async function(event) {
-      return await normalizeImage(event.toJSON());
-    }),
+    events.map(async function (event) {
+      return normalizeImage(event.toJSON());
+    })
   );
 
   let lastPageTime;
@@ -65,7 +65,7 @@ exports.get_events_by_type = async function(req, res) {
     .send(JSON.stringify({ data: mappedEvents, pageToken: lastPageToken }));
 };
 
-exports.create_event = async function(req, res) {
+exports.createEvent = async function (req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
@@ -89,8 +89,8 @@ exports.create_event = async function(req, res) {
     description: description,
     location: location,
     createTime: createTime,
-    image: 'default.jpg',
-  }).catch(err => res.status(500).send());
+    image: 'default.jpg'
+  }).catch(() => res.status(500).send());
 
   let eventId = newEvent._id;
 
@@ -98,7 +98,7 @@ exports.create_event = async function(req, res) {
     user: userId,
     event: eventId,
     role: 'ORGANIZER',
-    date: new Date(),
+    date: new Date()
   });
 
   return res.status(200).send(JSON.stringify({ data: eventId }));

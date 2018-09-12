@@ -5,25 +5,25 @@ const path = require('path');
 var multer = require('multer');
 
 var fs = require('fs');
-var file_name;
+var fileName;
 var username;
 var dir;
 
 var Storage = multer.diskStorage({
-  destination: function(req, file, callback) {
+  destination: function (req, file, callback) {
     callback(null, dir);
   },
-  filename: function(req, file, callback) {
-    file_name = file.fieldname + '_' + uuid.v4() + '_' + file.originalname;
-    callback(null, file_name);
-  },
+  filename: function (req, file, callback) {
+    fileName = file.fieldname + '_' + uuid.v4() + '_' + file.originalname;
+    callback(null, fileName);
+  }
 });
 
 var upload = multer({
-  storage: Storage,
-}).array('event', 5000); //Field name and max count
+  storage: Storage
+}).array('event', 5000); // Field name and max count
 
-exports.upload_image = async function(req, res) {
+exports.uploadImage = async function (req, res) {
   var id = req.params.id;
   username = req.query.username;
   dir = path.join(__dirname, '..', '..', 'public', 'uploads', username);
@@ -38,12 +38,12 @@ exports.upload_image = async function(req, res) {
   console.log(username);
   console.log(username);
 
-  upload(req, res, async function(err) {
+  upload(req, res, async function (err) {
     if (err) {
       res.status(300);
       return res.end('Something went wrong!');
     }
-    await Event.findByIdAndUpdate(id, { image: username + '/' + file_name });
+    await Event.findByIdAndUpdate(id, { image: username + '/' + fileName });
     console.log('ok');
     res.status(200);
     return res.end('File uploaded sucessfully!.');
@@ -57,7 +57,7 @@ exports.upload_image = async function(req, res) {
 //       res.status(300);
 //       return res.end("Something went wrong!");
 //     }
-//     await Event.findOneAndUpdate({ organizer: username }, { 'image': file_name });
+//     await Event.findOneAndUpdate({ organizer: username }, { 'image': fileName });
 //     res.status(200);
 //     return res.end("File uploaded sucessfully!.");
 //   });

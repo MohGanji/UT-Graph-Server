@@ -4,7 +4,7 @@ var Event = require('../../models/Event');
 var UserEvent = require('../../models/UserEvent');
 var Notification = require('../../models/Notification');
 
-exports.get_event = async function (req, res) {
+exports.getEvent = async function (req, res) {
   let id = req.params.id;
   let event;
   try {
@@ -15,12 +15,12 @@ exports.get_event = async function (req, res) {
   }
 };
 
-exports.edit_event = async function (req, res) {
+exports.editEvent = async function (req, res) {
   var id = req.params.id;
   var event = await Event.findById(id);
   var updatedEvent = req.body.data;
 
-  if (event.organizer != req.username) {
+  if (event.organizer !== req.username) {
     return res.status(401).send();
   }
 
@@ -29,7 +29,7 @@ exports.edit_event = async function (req, res) {
   return res.status(200).send();
 };
 
-exports.get_event_participants = async function (req, res) {
+exports.getEventParticipants = async function (req, res) {
   let eventId = mongoose.Types.ObjectId(req.params.id);
   let docs, users;
 
@@ -37,7 +37,7 @@ exports.get_event_participants = async function (req, res) {
     docs = await UserEvent.find({ event: eventId });
     users = await Promise.all(
       docs.map(async function (doc) {
-        return await User.findOne({ _id: doc.user });
+        return User.findOne({ _id: doc.user });
       })
     );
     return res.status(200).send(JSON.stringify({ data: users }));
@@ -46,10 +46,8 @@ exports.get_event_participants = async function (req, res) {
   }
 };
 
-exports.signup_staff = async function (req, res) {
+exports.signupStaff = async function (req, res) {
   let username = req.username;
-  let user = await User.findOne({ username: username });
-  let userId = user._id;
   let eventId = req.params.id;
   let event = await Event.findOne({ _id: eventId });
 
@@ -66,7 +64,7 @@ exports.signup_staff = async function (req, res) {
   return res.status(200).send();
 };
 
-exports.signup_attendent = async function (req, res) {
+exports.signupAttendent = async function (req, res) {
   let username = req.username;
   let user = await User.findOne({ username: username });
   let userId = user._id;
