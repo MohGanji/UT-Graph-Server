@@ -45,5 +45,10 @@ exports.getUserEvents = async function (req, res) {
   } catch (err) {
     return res.status(500).send();
   }
-  return res.status(200).send(JSON.stringify({ data: events }));
+  var mappedEvents = await Promise.all(
+    events.map(async function (event) {
+      return normalizeImage(event.toJSON());
+    })
+  );
+  return res.status(200).send(JSON.stringify({ data: mappedEvents }));
 };

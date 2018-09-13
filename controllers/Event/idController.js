@@ -3,13 +3,16 @@ var User = require('../../models/User');
 var Event = require('../../models/Event');
 var UserEvent = require('../../models/UserEvent');
 var Notification = require('../../models/Notification');
+var normalizeImage = require('../../utils/normalizeImage');
 
 exports.getEvent = async function (req, res) {
   let id = req.params.id;
   let event;
   try {
     event = await Event.findOne({ _id: id });
-    return res.status(200).send(JSON.stringify({ data: event.toJSON() }));
+    return res
+      .status(200)
+      .send(JSON.stringify({ data: await normalizeImage(event.toJSON()) }));
   } catch (err) {
     return res.status(500).send();
   }
