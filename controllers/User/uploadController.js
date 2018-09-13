@@ -38,10 +38,6 @@ exports.uploadImage = async function (req, res) {
       { username: username },
       { image: username + '/' + fileName }
     );
-    console.log('ok');
-    console.log('ok');
-    console.log('ok');
-    console.log('ok');
 
     res.status(200);
     return res.end('File uploaded sucessfully!.');

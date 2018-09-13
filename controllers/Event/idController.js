@@ -21,9 +21,6 @@ exports.getEvent = async function (req, res) {
 exports.deleteEvent = async function (req, res) {
   let username = req.username;
   var id = req.params.id;
-  console.log('delete event');
-  console.log(username);
-  console.log(id);
   try {
     let event = await Event.findOne({ organizer: username, _id: id });
     event.active = false;
