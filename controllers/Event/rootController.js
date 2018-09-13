@@ -30,14 +30,16 @@ exports.getEventsByType = async function (req, res) {
     if (type === 'old') {
       events = await Event.find({
         createTime: { $lt: time },
-        endTime: { $lt: currentDate }
+        endTime: { $lt: currentDate },
+        active: 'true'
       })
         .sort({ createTime: -1 })
         .limit(8);
     } else if (type === 'new') {
       events = await Event.find({
         createTime: { $lt: time },
-        endTime: { $gte: currentDate }
+        endTime: { $gte: currentDate },
+        active: 'true'
       })
         .sort({ createTime: -1 })
         .limit(8);
