@@ -5,12 +5,12 @@ var UserEvent = require('../../models/UserEvent');
 
 exports.acceptById = async function (req, res) {
   var username = req.username;
-  var user, userId, notification, notificationId;
+  var user, notification, notificationId;
+  let userApplicant;
   var event;
-
   try {
     user = await User.findOne({ username: username });
-    userId = user._id;
+    // userId = user._id;
 
     notificationId = req.params.id;
     notification = await Notification.findOneAndUpdate(
@@ -19,16 +19,16 @@ exports.acceptById = async function (req, res) {
     );
 
     event = await Event.findOne({ title: notification.event });
-    UserApplicant = await User.findOne({ username: notification.applicant });
+    userApplicant = await User.findOne({ username: notification.applicant });
   } catch (err) {
     return res.status(500).send();
   }
 
-  if (event.organizer != user.username) {
+  if (event.organizer !== user.username) {
     return res.status(401).send();
   } else {
     await UserEvent.create({
-      user: UserApplicant,
+      user: userApplicant._id,
       event: event,
       role: 'STAFF',
       date: new Date()
@@ -48,11 +48,12 @@ exports.acceptById = async function (req, res) {
 
 exports.rejectById = async function (req, res) {
   var username = req.username;
-  var user, userId, notification, notificationId;
+  var user, notification, notificationId;
+  let event;
 
   try {
     user = await User.findOne({ username: username });
-    userId = user._id;
+    // userId = user._id;
 
     notificationId = req.params.id;
     notification = await Notification.findOneAndUpdate(
@@ -64,7 +65,7 @@ exports.rejectById = async function (req, res) {
     return res.status(500).send();
   }
 
-  if (event.organizer != user.username) {
+  if (event.organizer !== user.username) {
     return res.status(401).send();
   } else {
     await Notification.create({
@@ -92,7 +93,7 @@ exports.getNotificationById = async function (req, res) {
     return res.status(500).send();
   }
 
-  if (notification.user != userId) {
+  if (notification.user !== userId) {
     return res.status(401).send();
   } else {
     return res.status(200).send(JSON.stringify({ data: notification }));
