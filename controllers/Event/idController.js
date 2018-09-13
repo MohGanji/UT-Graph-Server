@@ -43,7 +43,12 @@ exports.getEventParticipants = async function (req, res) {
         return User.findOne({ _id: doc.user });
       })
     );
-    return res.status(200).send(JSON.stringify({ data: users }));
+    var mappedUsers = await Promise.all(
+      users.map(async function (user) {
+        return normalizeImage(user.toJSON());
+      })
+    );
+    return res.status(200).send(JSON.stringify({ data: mappedUsers }));
   } catch (err) {
     return res.status(500);
   }
