@@ -32,20 +32,34 @@ exports.editEvent = async function (req, res) {
   return res.status(200).send();
 };
 
-exports.getEventParticipants = async function (req, res) {
+exports.getEventParticipantNumber = async function (req, res) {
   let eventId = mongoose.Types.ObjectId(req.params.id);
-  let docs, users;
 
   try {
-    docs = await UserEvent.find({ event: eventId });
-    users = await Promise.all(
+    let participantsNumber = await UserEvent.count({
+      event: eventId,
+      role: 'ATTENDENT'
+    });
+    return res.status(200).send(JSON.stringify({ data: participantsNumber }));
+  } catch (err) {
+    return res.status(500);
+  }
+};
+
+exports.getEventStaff = async function (req, res) {
+  let eventId = mongoose.Types.ObjectId(req.params.id);
+
+  try {
+    let docs = await UserEvent.find({ event: eventId, role: 'STAFF' });
+    let users = await Promise.all(
       docs.map(async function (doc) {
-        return User.findOne({ _id: doc.user });
+        let user = await User.findOne({ _id: doc.user });
+        return user;
       })
     );
     return res.status(200).send(JSON.stringify({ data: users }));
   } catch (err) {
-    return res.status(500);
+    res.status(500);
   }
 };
 
