@@ -12,7 +12,8 @@ var UserSchema = mongoose.Schema({
   role: {
     type: String,
     enum: ['USER', 'ADMIN']
-  }
+  },
+  bio: { type: String, default: '' }
 });
 
 UserSchema.methods.toJSON = function () {
