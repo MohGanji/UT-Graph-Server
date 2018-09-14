@@ -26,9 +26,7 @@ exports.uploadImage = async function (req, res) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
-  console.log(username);
-  // console.log(req.headers);
-  // console.log(req.query);//username
+
   upload(req, res, async function (err) {
     if (err) {
       res.status(300);

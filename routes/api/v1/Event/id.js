@@ -8,6 +8,10 @@ router.get('/', idController.getEvent);
 
 router.put('/', isAuthenticated, idController.editEvent);
 
+router.get('/participant-number', idController.getEventParticipantNumber);
+
+router.get('/staff', idController.getEventStaff);
+
 router.delete('/', isAuthenticated, idController.deleteEvent);
 
 router.get('/participants', idController.getEventParticipants);
