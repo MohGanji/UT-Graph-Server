@@ -42,7 +42,7 @@ exports.getEventsByType = async function (req, res) {
         active: 'true'
       })
         .sort({ createTime: -1 })
-        .limit(8);
+        .limit(6);
     } else {
       return res.status(404).send();
     }
@@ -91,7 +91,7 @@ exports.createEvent = async function (req, res) {
     description: description,
     location: location,
     createTime: createTime,
-    image: 'default.jpg'
+    image: 'defaultEvent.svg'
   }).catch(() => res.status(500).send());
 
   let eventId = newEvent._id;
