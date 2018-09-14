@@ -1,5 +1,7 @@
 var User = require('../../models/User');
 var normalizeImage = require('../../utils/normalizeImage');
+const bcrypt = require('bcrypt');
+const config = require('../../utils/config');
 
 exports.get_users = async function (req, res) {
   try {
@@ -17,7 +19,21 @@ exports.get_users = async function (req, res) {
 
 exports.edit_profile = async function (req, res) {
   let username = req.username;
+  let user = await User.findOne({ username: username });
   let updatedUser = req.body.data;
+
+  if (updatedUser.password === '') {
+    updatedUser.password = user.password;
+  } else {
+    updatedUser.password = await bcrypt.hash(
+      updatedUser.password,
+      config.saltRounds
+    );
+  }
+
+  if (updatedUser.image === '') {
+    updatedUser.image = user.image;
+  }
 
   await User.findOneAndUpdate({ username: username }, { $set: updatedUser });
   return res.status(200).send();
