@@ -59,6 +59,23 @@ exports.getEventParticipantNumber = async function (req, res) {
   }
 };
 
+exports.getEventParticipants = async function (req, res) {
+  let eventId = mongoose.Types.ObjectId(req.params.id);
+  let docs, users;
+
+  try {
+    docs = await UserEvent.find({ event: eventId });
+    users = await Promise.all(
+      docs.map(async function (doc) {
+        return User.findOne({ _id: doc.user });
+      })
+    );
+    return res.status(200).send(JSON.stringify({ data: users }));
+  } catch (err) {
+    return res.status(500);
+  }
+};
+
 exports.getEventStaff = async function (req, res) {
   let eventId = mongoose.Types.ObjectId(req.params.id);
 
