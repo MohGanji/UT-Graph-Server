@@ -30,21 +30,12 @@ exports.uploadImage = async function (req, res) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
-
-  console.log(username);
-  console.log(username);
-  console.log(username);
-  console.log(username);
-  console.log(username);
-  console.log(username);
-
   upload(req, res, async function (err) {
     if (err) {
       res.status(300);
       return res.end('Something went wrong!');
     }
     await Event.findByIdAndUpdate(id, { image: username + '/' + fileName });
-    console.log('ok');
     res.status(200);
     return res.end('File uploaded sucessfully!.');
   });

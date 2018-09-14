@@ -10,7 +10,8 @@ var EventSchema = mongoose.Schema({
   createTime: Date,
   location: String,
   image: String,
-  isPassed: Boolean
+  isPassed: Boolean,
+  active: { type: Boolean, default: true }
 });
 
 EventSchema.methods.toJSON = function () {

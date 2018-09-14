@@ -12,6 +12,10 @@ router.get('/participant-number', idController.getEventParticipantNumber);
 
 router.get('/staff', idController.getEventStaff);
 
+router.delete('/', isAuthenticated, idController.deleteEvent);
+
+router.get('/participants', idController.getEventParticipants);
+
 router.post('/signup_staff', isAuthenticated, idController.signupStaff);
 
 router.post('/signup_attendent', isAuthenticated, idController.signupAttendent);

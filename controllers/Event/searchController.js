@@ -15,7 +15,8 @@ exports.eventSearch = async function (req, res) {
         { title: { $regex: '.*' + keyword + '.*' } },
         { description: { $regex: '.*' + keyword + '.*' } },
         { organizer: { $regex: '.*' + keyword + '.*' } }
-      ]
+      ],
+      active: 'true'
     });
   } catch (err) {
     return res.status(500).send();

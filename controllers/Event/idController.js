@@ -18,6 +18,19 @@ exports.getEvent = async function (req, res) {
   }
 };
 
+exports.deleteEvent = async function (req, res) {
+  let username = req.username;
+  var id = req.params.id;
+  try {
+    let event = await Event.findOne({ organizer: username, _id: id });
+    event.active = false;
+    await event.save();
+    return res.status(200).send();
+  } catch (err) {
+    return res.status(404).send();
+  }
+};
+
 exports.editEvent = async function (req, res) {
   var id = req.params.id;
   var event = await Event.findById(id);
@@ -57,7 +70,12 @@ exports.getEventStaff = async function (req, res) {
         return user;
       })
     );
-    return res.status(200).send(JSON.stringify({ data: users }));
+    var mappedUsers = await Promise.all(
+      users.map(async function (user) {
+        return normalizeImage(user.toJSON());
+      })
+    );
+    return res.status(200).send(JSON.stringify({ data: mappedUsers }));
   } catch (err) {
     res.status(500);
   }
