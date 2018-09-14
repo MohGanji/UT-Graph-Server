@@ -39,7 +39,7 @@ exports.getUserEvents = async function (req, res) {
       docs.map(async function (doc) {
         let event = await Event.findOne({ _id: doc.event });
         event.role = doc.role;
-        return normalizeImage(event);
+        return event;
       })
     );
   } catch (err) {
