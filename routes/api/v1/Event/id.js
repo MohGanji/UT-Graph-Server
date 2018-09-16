@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
-var isAuthenticated = require('../../../../middlewares/verifyJWTToken')
-  .verifyJWTToken;
+var isAuthenticated = require('../../../../middlewares/isAuthenticated');
 var idController = require('../../../../controllers/Event/idController');
 
 router.get('/', idController.getEvent);

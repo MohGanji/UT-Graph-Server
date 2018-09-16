@@ -8,9 +8,11 @@ var forgetPassword = require('./forget-password');
 var search = require('./search');
 var upload = require('./upload');
 var idParam = require('./id');
+var logout = require('./logout');
 
 router.use('/forget_password', forgetPassword);
 router.use('/login', login);
+router.use('/logout', logout);
 router.use('/register', register);
 router.use('/reset_password', resetPassword);
 router.use('/search', search);

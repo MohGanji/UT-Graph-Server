@@ -13,13 +13,15 @@ var UserSchema = mongoose.Schema({
     type: String,
     enum: ['USER', 'ADMIN']
   },
-  bio: { type: String, default: '' }
+  bio: { type: String, default: '' },
+  refreshToken: { type: String, default: '' }
 });
 
 UserSchema.methods.toJSON = function () {
   var obj = this.toObject();
   delete obj.password;
   delete obj.__v;
+  delete obj.refreshToken;
   return obj;
 };
 

@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var isAuthenticated = require('../../../../middlewares/isAuthenticated');
-var searchController = require('../../../../controllers/Sponser/searchController');
 
-router.get('/:keyword', isAuthenticated, searchController.sponserSearch);
+var logoutController = require('../../../../controllers/User/logoutController');
+
+router.post('/', isAuthenticated, logoutController.logout);
 
 module.exports = router;

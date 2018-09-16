@@ -1,9 +1,6 @@
-var config = require('../../utils/config');
-var jwt = require('jsonwebtoken');
-
+var User = require('../../models/User');
+var auth = require('../../utils/auth');
 const { validationResult } = require('express-validator/check');
-
-var secret = config.secret;
 
 exports.login = async function (req, res) {
   const errors = validationResult(req);
@@ -11,16 +8,13 @@ exports.login = async function (req, res) {
     return res.status(422).json({ errors: errors.array() });
   }
   let username = req.body.data.username;
-  let authenticationObj = {
-    data: {
-      token: ''
-    }
-  };
-  authenticationObj.data.token = jwt.sign(
-    {
-      username: username
-    },
-    secret
-  );
-  return res.json(authenticationObj);
+  let user = await User.findOne({ username: username });
+  let refreshToken = await auth.createRefreshToken();
+  let accessToken = await auth.createAccessToken(user);
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  return res.json({
+    data: { accessToken: accessToken, refreshToken: refreshToken }
+  });
 };
