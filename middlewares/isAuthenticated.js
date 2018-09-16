@@ -5,13 +5,13 @@ module.exports = async function (req, res, next) {
   if (token === '') {
     return res.status(401).send();
   }
+  let isValid;
 
-  let isValid = await auth.validateToken(token);
-
-  if (isValid) {
+  try {
+    isValid = await auth.validateToken(token);
     req.username = isValid.username;
     return next();
-  } else {
+  } catch (error) {
     return res.status(401).send();
   }
 };
