@@ -34,7 +34,7 @@ exports.getEventsByType = async function (req, res) {
         active: 'true'
       })
         .sort({ createTime: -1 })
-        .limit(8);
+        .limit(6);
     } else if (type === 'new') {
       events = await Event.find({
         createTime: { $lt: time },
