@@ -20,7 +20,7 @@ exports.registerUser = async function (req, res) {
   } else {
     newUser.role = 'USER';
   }
-  newUser.image = 'defaultProfile.png';
+  newUser.image = 'defaultProfile.svg';
   try {
     await User.create(newUser);
   } catch (err) {
