@@ -4,15 +4,29 @@ var Event = require('../../models/Event');
 var UserEvent = require('../../models/UserEvent');
 var Notification = require('../../models/Notification');
 var normalizeImage = require('../../utils/normalizeImage');
+var findEventById = require('../../utils/findEventById');
+var getEventStaff = require('../../utils/getEventStaff');
+var getEventParticipantsCount = require('../../utils/getEventParticipantsCount');
+var findUserByUsername = require('../../utils/findUserByUsername');
 
 exports.getEvent = async function (req, res) {
   let id = req.params.id;
-  let event;
   try {
-    event = await Event.findOne({ _id: id });
-    return res
-      .status(200)
-      .send(JSON.stringify({ data: await normalizeImage(event.toJSON()) }));
+    let event = await findEventById(id);
+    let staff = await getEventStaff(id);
+    let participantsCount = await getEventParticipantsCount(id);
+    let organizer = await findUserByUsername(event.organizer);
+
+    return res.status(200).send(
+      JSON.stringify({
+        data: {
+          event: event,
+          staff: staff,
+          participantsCount: participantsCount,
+          organizer: organizer
+        }
+      })
+    );
   } catch (err) {
     return res.status(500).send();
   }
