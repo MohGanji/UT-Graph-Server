@@ -9,6 +9,7 @@
 # production
 /build
 public/
+mail/
 
 # misc
 .DS_Store

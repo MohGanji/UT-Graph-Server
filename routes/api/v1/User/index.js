@@ -9,6 +9,7 @@ var search = require('./search');
 var upload = require('./upload');
 var idParam = require('./id');
 var logout = require('./logout');
+var emailValidation = require('./email-validation');
 
 router.use('/forget_password', forgetPassword);
 router.use('/login', login);
@@ -17,6 +18,7 @@ router.use('/register', register);
 router.use('/reset_password', resetPassword);
 router.use('/search', search);
 router.use('/upload', upload);
+router.use('/email-validation/:hash', emailValidation);
 router.use('/:id', idParam);
 router.use('/', root);
 
