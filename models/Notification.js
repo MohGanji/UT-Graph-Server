@@ -10,7 +10,7 @@ var NotificationSchema = mongoose.Schema({
     enum: ['REQUEST', 'ACCEPT', 'REJECT', 'INFORMATION']
   },
   applicant: String,
-  event: String,
+  event: mongoose.Schema.Types.ObjectId,
   index: Number,
   hasButton: { type: Boolean, default: false },
   off: { type: Boolean, default: false }

@@ -123,7 +123,7 @@ exports.signupStaff = async function (req, res) {
     type: 'REQUEST',
     hasButton: true,
     applicant: username,
-    event: event.title,
+    event: event._id,
     index: await Notification.find({}).count()
   });
 
