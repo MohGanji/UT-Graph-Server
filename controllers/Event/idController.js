@@ -8,6 +8,7 @@ var findEventById = require('../../utils/findEventById');
 var getEventStaff = require('../../utils/getEventStaff');
 var getEventParticipantsCount = require('../../utils/getEventParticipantsCount');
 var findUserByUsername = require('../../utils/findUserByUsername');
+var getEventParticipantNumber = require('../../utils/getEventParticipantsCount');
 
 exports.getEvent = async function (req, res) {
   let id = req.params.id;
@@ -135,6 +136,12 @@ exports.signupAttendent = async function (req, res) {
   let user = await User.findOne({ username: username });
   let userId = user._id;
   let eventId = req.params.id;
+
+  let event = await Event.findById(eventId);
+  let participantsCount = await getEventParticipantsCount(eventId);
+  if (event.capacity === participantsCount) {
+    return res.status(422).send();
+  }
 
   await UserEvent.create({
     user: userId,
