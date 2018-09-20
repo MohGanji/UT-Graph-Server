@@ -25,3 +25,7 @@ exports.createRefreshToken = async function () {
 exports.validateToken = async function (token) {
   return jwt.verify(token, config.secret);
 };
+
+exports.decodeToken = async function (token) {
+  return jwt.decode(token);
+};
