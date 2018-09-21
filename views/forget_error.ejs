@@ -94,63 +94,12 @@
       margin-bottom: 10px;
     }
   </style>
-  <script>
-    function handlePassword() {
-      let password = document.getElementById('pass');
-      let passwordRepeat = document.getElementById('passRepeat');
-      if (password.value !== passwordRepeat.value) {
-        passwordRepeat.style.background = "#F5B7B1";
-      } else {
-        passwordRepeat.style.background = "#FFFFFF";
-        document.getElementById('wrongRepeatInfo').style.display = "none";
-      }
-
-      if (password.value.length >= 6) {
-        document.getElementById('smallPassInfo').style.display = 'none';
-      }
-    }
-
-    function handleSubmit() {
-      let password = document.getElementById('pass');
-      let passwordRepeat = document.getElementById('passRepeat');
-
-      if (password.value !== passwordRepeat.value) {
-        document.getElementById('wrongRepeatInfo').style.display = "block";
-        return false;
-      }
-      else {
-        document.getElementById('wrongRepeatInfo').style.display = "none";
-      }
-
-      if (password.value.length < 6) {
-        document.getElementById('smallPassInfo').style.display = 'block';
-        return false;
-      } else {
-        document.getElementById('smallPassInfo').style.display = 'none';
-      }
-      return true;
-    }
-  </script>
 </head>
 
 <body>
   <div class="container">
     <div class="center_container">
-      <h1>بازیابی رمز عبور</h1>
-      <form action="/api/v1/user/reset-password/" onsubmit="return handleSubmit()" method="POST" class="column">
-        <input type="password" id="pass" name="password" oninput="handlePassword()" placeholder="رمز عبور" required/>
-        <input type="password" id="passRepeat" name="password_repeat" oninput="handlePassword()" placeholder="تکرار رمز عبور" required
-        />
-        <input type="hidden" name="userId" value='<%= userId %>' />
-        <input type="submit" value="ثبت" class="button">
-      </form>
-      <p class="input_info" id="wrongRepeatInfo">
-        <i class="fas fa-info-circle"></i>
-        رمز عبور و تکرار رمز عبور باید یکسان باشند
-      </p>
-      <p class="input_info" id="smallPassInfo">
-        <i class="fas fa-info-circle"></i>
-        رمز عبور باید حداقل از ۶ کاراکتر تشکیل شده باشد
+      <h2>لینک بازیابی رمز عبور شما معتبر نمیباشد</h2>
       </p>
     </div>
   </div>

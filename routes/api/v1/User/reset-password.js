@@ -1,8 +1,9 @@
 var express = require('express');
+var resetPasswordController = require('../../../../controllers/User/resetPasswordController');
 var router = express.Router();
-var isAuthenticated = require('../../../../middlewares/isAuthenticated');
-var resetPasswordController = require('../../../../controllers/User/resetPasswordCotroller');
 
-router.post('/', isAuthenticated, resetPasswordController.resetPassword);
+router.get('/:hash', resetPasswordController.renderResetPaswordPage);
+router.post('/', resetPasswordController.handleResetPassword);
+router.put('/', resetPasswordController.submitNewResetRequest);
 
 module.exports = router;
