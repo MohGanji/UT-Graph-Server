@@ -5,8 +5,8 @@ const bcrypt = require('bcrypt');
 const config = require('../../utils/config');
 const { validationResult } = require('express-validator/check');
 const uuid = require('uuid');
-const nodemailer = require('nodemailer');
 const email = require('../../mail/');
+var sendEmail = require('../../utils/sendEmail');
 
 exports.registerUser = async function (req, res) {
   const errors = validationResult(req);
@@ -28,13 +28,6 @@ exports.registerUser = async function (req, res) {
   newUser.image = 'defaultProfile.svg';
   try {
     let userHash = await uuid.v4();
-    let transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: email.user,
-        pass: email.password
-      }
-    });
     let mailOptions = {
       from: email.user,
       to: userEmail,
@@ -42,14 +35,7 @@ exports.registerUser = async function (req, res) {
       html: `<p align="right" dir="right">با سلام</p> 
       <p align="right" dir="right">برای فعالسازی حساب کاربری خود <a href="http://localhost:3000/email-validation/${userHash}">اینجا</a> را کلیک کنید</p>`
     };
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-        return res.status(500).send();
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
+    sendEmail(mailOptions);
     let user = await User.create(newUser);
     await EmailValidation.create({
       user: user._id,
