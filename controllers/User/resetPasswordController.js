@@ -57,9 +57,12 @@ exports.submitNewResetRequest = async function (req, res) {
       to: userEmail,
       subject: 'بازیابی رمز عبور سایت UT Graph',
       html: `<p align="right" dir="right">با سلام</p> 
-        <p align="right" dir="right">برای بازیابی رمز عبور خود <a href="http://localhost:8080/api/v1/user/reset-password/${hash}">اینجا</a> را کلیک کنید</p>
+        <p align="right" dir="right">برای بازیابی رمز عبور خود 
+        <a href="${process.env.URL}/api/v1/user/reset-password/${hash}">
+        اینجا</a> را کلیک کنید</p>
         <p align="right" dir="right">اگر لینک بالا کار نمیکند آدرس زیر را در مرورگر خود کپی کرده و وارد شوید<p>
-        <a href="http://localhost:8080/api/v1/user/reset-password/${hash}">http://localhost:8080/api/v1/user/reset-password/${hash}</a>`
+        <a href="${process.env.URL}/api/v1/user/reset-password/${hash}">
+        ${process.env.URL}/api/v1/user/reset-password/${hash}</a>`
     };
     await sendEmail(mailOptions);
   } catch (error) {

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "PORT=8080 NODE_ENV='development' PUBLIC_URL='http://localhost:8080/public/' node ./bin/www",
+    "start": "PORT=8080 NODE_ENV='development' PUBLIC_URL='http://localhost:8080/public/' URL='http://localhost:8080' node ./bin/www",
     "test": "jest --runInBand --forceExit -b"
   },
   "dependencies": {
