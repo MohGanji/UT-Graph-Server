@@ -27,7 +27,8 @@ exports.registerUser = async function (req, res) {
   }
   newUser.image = 'defaultProfile.svg';
   try {
-    let userHash = await uuid.v4();
+    let userHash =
+      (await Buffer.from(userEmail).toString('base64')) + (await uuid.v4());
     let mailOptions = {
       from: email.user,
       to: userEmail,
