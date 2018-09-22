@@ -33,7 +33,9 @@ exports.registerUser = async function (req, res) {
       to: userEmail,
       subject: 'فعال سازی حساب کاربری UT Graph',
       html: `<p align="right" dir="right">با سلام</p> 
-      <p align="right" dir="right">برای فعالسازی حساب کاربری خود <a href="http://localhost:3000/email-validation/${userHash}">اینجا</a> را کلیک کنید</p>`
+      <p align="right" dir="right">برای فعالسازی حساب کاربری خود <a href="http://localhost:8080/api/v1/user/email-validation/${userHash}">اینجا</a> را کلیک کنید</p>
+      <p align="right" dir="right">در صورتی که لینک بالا کار نمیکند لینک زیر را در مروگر خود کپی کرده و وارد شوید:</p>
+      <a href="http://localhost:8080/api/v1/user/email-validation/${userHash}">http://localhost:8080/api/v1/user/email-validation/${userHash}</a>`
     };
     sendEmail(mailOptions);
     let user = await User.create(newUser);
