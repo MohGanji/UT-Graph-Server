@@ -13,7 +13,9 @@ exports.renderResetPaswordPage = async function (req, res) {
       hash: hash
     });
     if (!resetPasswordRequest) {
-      return res.render('forget_error.ejs');
+      return res.render('result_page.ejs', {
+        text: 'لینک بازیابی رمز عبور شما معتبر نمیباشد'
+      });
     }
     let userId = resetPasswordRequest.user;
     await resetPasswordRequest.remove(); // i'm deleting it!
@@ -29,7 +31,9 @@ exports.handleResetPassword = async function (req, res) {
     let password = req.body.password;
     password = await bcrypt.hash(password, config.saltRounds);
     await User.findByIdAndUpdate(userId, { $set: { password: password } });
-    res.render('forget_success.ejs');
+    res.render('result_page.ejs', {
+      text: 'رمز عبور شما با موفقیت تغییر یافت'
+    });
   } catch (error) {
     return res.status(500).send();
   }
