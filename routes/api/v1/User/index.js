@@ -19,7 +19,6 @@ router.use('/search', search);
 router.use('/upload', upload);
 router.use('/:username', usernameParam);
 router.use('/email-validation/:hash', emailValidation);
-router.use('/:id', idParam);
 router.use('/', root);
 
 module.exports = router;
