@@ -5,13 +5,15 @@ module.exports = {
       script: 'app.js',
       env: {
         NODE_ENV: 'development',
-        PUBLIC_URL: 'http://localhost:8080/public/',
+        URL: 'http://localhost:8080',
+        PUBLIC_URL: 'http://localhost:8080/public/'
       },
       env_production: {
         NODE_ENV: 'production',
-        PUBLIC_URL: 'http://188.166.114.43/public/',
-      },
-    },
+        URL: 'http://188.166.114.43',
+        PUBLIC_URL: 'http://188.166.114.43/public/'
+      }
+    }
   ],
 
   deploy: {
@@ -22,7 +24,7 @@ module.exports = {
       repo: 'git@github.com:repo.git',
       path: '/var/www/production',
       'post-deploy':
-        'npm install && pm2 reload ecosystem.config.js --env production',
-    },
-  },
+        'npm install && pm2 reload ecosystem.config.js --env production'
+    }
+  }
 };

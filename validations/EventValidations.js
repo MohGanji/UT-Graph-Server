@@ -18,6 +18,9 @@ exports.createEvent = [
       throw new Error('نام کاربری وارد شده یافت نشد!');
     }
   }),
+  check('data.capacity', 'فیلد ظرفیت نمیتواند خالی باشد!')
+    .not()
+    .isEmpty(),
   check('data.beginTime', 'فیلد تاریخ شروع رویداد نمی تواند خالی باشد!')
     .not()
     .isEmpty(),

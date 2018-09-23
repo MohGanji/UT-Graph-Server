@@ -8,6 +8,7 @@ var findEventById = require('../../utils/findEventById');
 var getEventStaff = require('../../utils/getEventStaff');
 var getEventParticipantsCount = require('../../utils/getEventParticipantsCount');
 var findUserByUsername = require('../../utils/findUserByUsername');
+var auth = require('../../utils/auth');
 
 exports.getEvent = async function (req, res) {
   let id = req.params.id;
@@ -16,18 +17,39 @@ exports.getEvent = async function (req, res) {
     let staff = await getEventStaff(id);
     let participantsCount = await getEventParticipantsCount(id);
     let organizer = await findUserByUsername(event.organizer);
+    let result = {
+      data: {
+        event: event,
+        staff: staff,
+        participantsCount: participantsCount,
+        organizer: organizer
+      }
+    };
 
-    return res.status(200).send(
-      JSON.stringify({
-        data: {
-          event: event,
-          staff: staff,
-          participantsCount: participantsCount,
-          organizer: organizer
-        }
-      })
-    );
+    let token = req.headers.authorization;
+
+    if (token !== 'null') {
+      let token = req.headers.authorization;
+      let decodedUser = await auth.decodeToken(token);
+      let user = await findUserByUsername(decodedUser.username);
+      let userAsStaffJobs = await UserEvent.find({
+        event: id,
+        user: user,
+        role: 'STAFF'
+      });
+      let userAsAttendant = await UserEvent.findOne({
+        event: id,
+        user: user,
+        role: 'ATTENDENT'
+      });
+
+      result.data.isRegistered = !!userAsAttendant;
+      result.data.isAdmin = event.organizer === user.username;
+      result.data.userAsStaffJobs = userAsStaffJobs;
+    }
+    return res.status(200).send(JSON.stringify(result));
   } catch (err) {
+    console.log(err);
     return res.status(500).send();
   }
 };
@@ -123,7 +145,7 @@ exports.signupStaff = async function (req, res) {
     type: 'REQUEST',
     hasButton: true,
     applicant: username,
-    event: event.title,
+    event: event._id,
     index: await Notification.find({}).count()
   });
 
@@ -135,6 +157,12 @@ exports.signupAttendent = async function (req, res) {
   let user = await User.findOne({ username: username });
   let userId = user._id;
   let eventId = req.params.id;
+
+  let event = await Event.findById(eventId);
+  let participantsCount = await getEventParticipantsCount(eventId);
+  if (event.capacity === participantsCount) {
+    return res.status(422).send();
+  }
 
   await UserEvent.create({
     user: userId,

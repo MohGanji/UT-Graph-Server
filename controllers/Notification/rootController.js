@@ -1,15 +1,14 @@
 var Notification = require('../../models/Notification');
 var User = require('../../models/User');
 var Event = require('../../models/Event');
-var UserEvent = require('../../models/UserEvent');
+var normalizeImage = require('../../utils/normalizeImage');
 
-exports.getStatus = async function (req, res) {
+exports.getByStatus = async function (req, res) {
   var username = req.username;
   try {
     var user = await User.findOne({ username: username });
-    var userId = user._id;
     var notifications;
-    if (req.params.status == 1) {
+    if (req.params.status === '1') {
       notifications = await Notification.find({
         user: user.username,
         read: false
@@ -21,7 +20,10 @@ exports.getStatus = async function (req, res) {
 
   var mappedNotifications = await Promise.all(
     notifications.map(async function (notif) {
-      return await notif.toJSON();
+      let event = await Event.findById(notif.event);
+      let notifObject = notif.toJSON();
+      notifObject.event = normalizeImage(event.toJSON());
+      return notifObject;
     })
   );
 

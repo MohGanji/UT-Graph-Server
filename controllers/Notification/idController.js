@@ -10,7 +10,6 @@ exports.acceptById = async function (req, res) {
   var event;
   try {
     user = await User.findOne({ username: username });
-    // userId = user._id;
 
     notificationId = req.params.id;
     notification = await Notification.findOneAndUpdate(
@@ -18,7 +17,7 @@ exports.acceptById = async function (req, res) {
       { $set: { hasButton: false, off: true } }
     );
 
-    event = await Event.findOne({ title: notification.event });
+    event = await Event.findById(notification.event);
     userApplicant = await User.findOne({ username: notification.applicant });
   } catch (err) {
     return res.status(500).send();
@@ -53,14 +52,13 @@ exports.rejectById = async function (req, res) {
 
   try {
     user = await User.findOne({ username: username });
-    // userId = user._id;
 
     notificationId = req.params.id;
     notification = await Notification.findOneAndUpdate(
       { _id: notificationId },
       { $set: { hasButton: false, off: true } }
     );
-    event = await Event.findOne({ title: notification.event });
+    event = await Event.findById(notification.event);
   } catch (err) {
     return res.status(500).send();
   }

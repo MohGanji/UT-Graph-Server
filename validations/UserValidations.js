@@ -10,7 +10,7 @@ exports.login = [
         req.body.data.password,
         user.password
       );
-      if (!isPasswordCorrect) {
+      if (!isPasswordCorrect || user.active === false) {
         throw new Error('نام کاربری یا رمز عبور اشتباه است!');
       }
     } else {

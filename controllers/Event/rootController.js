@@ -82,6 +82,7 @@ exports.createEvent = async function (req, res) {
   let location = req.body.data.location;
   let user = await User.findOne({ username: organizer });
   let userId = user._id;
+  let capacity = req.body.data.capacity;
 
   let newEvent = await Event.create({
     title: title,
@@ -91,7 +92,8 @@ exports.createEvent = async function (req, res) {
     description: description,
     location: location,
     createTime: createTime,
-    image: 'defaultEvent.svg'
+    image: 'defaultEvent.svg',
+    capacity: capacity
   }).catch(() => res.status(500).send());
 
   let eventId = newEvent._id;

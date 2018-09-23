@@ -8,7 +8,7 @@ var UserSchema = mongoose.Schema({
   email: String,
   sid: String,
   image: String,
-  active: { type: Boolean, default: true },
+  active: { type: Boolean, default: false },
   role: {
     type: String,
     enum: ['USER', 'ADMIN']
