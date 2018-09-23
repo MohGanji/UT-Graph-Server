@@ -7,7 +7,7 @@ var resetPassword = require('./reset-password');
 var forgetPassword = require('./forget-password');
 var search = require('./search');
 var upload = require('./upload');
-var idParam = require('./id');
+var usernameParam = require('./username');
 var logout = require('./logout');
 
 router.use('/forget_password', forgetPassword);
@@ -17,7 +17,7 @@ router.use('/register', register);
 router.use('/reset_password', resetPassword);
 router.use('/search', search);
 router.use('/upload', upload);
-router.use('/:id', idParam);
+router.use('/:username', usernameParam);
 router.use('/', root);
 
 module.exports = router;

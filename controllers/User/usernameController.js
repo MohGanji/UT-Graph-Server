@@ -4,7 +4,7 @@ let Event = require('../../models/Event');
 var normalizeImage = require('../../utils/normalizeImage');
 
 exports.getUserByUsername = async function (req, res) {
-  let username = req.params.id;
+  let username = req.params.username;
 
   try {
     var user = await User.findOne({ username: username });
@@ -23,7 +23,8 @@ exports.getUserByUsername = async function (req, res) {
 };
 
 exports.getUserEvents = async function (req, res) {
-  let username = req.params.id;
+  let username = req.params.username;
+  let role = req.params.role;
   let user = await User.findOne({ username: username });
 
   if (!user) {
@@ -34,7 +35,7 @@ exports.getUserEvents = async function (req, res) {
   let docs, events;
 
   try {
-    docs = await UserEvent.find({ user: userId });
+    docs = await UserEvent.find({ user: userId, role: role });
     events = await Promise.all(
       docs.map(async function (doc) {
         let event = await Event.findOne({ _id: doc.event });
