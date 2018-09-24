@@ -28,7 +28,7 @@ exports.getEvent = async function (req, res) {
 
     let token = req.headers.authorization;
 
-    if (token !== 'null') {
+    if (token !== 'null' && typeof token !== 'undefined') {
       let token = req.headers.authorization;
       let decodedUser = await auth.decodeToken(token);
       let user = await findUserByUsername(decodedUser.username);
