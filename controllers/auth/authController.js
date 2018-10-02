@@ -1,6 +1,5 @@
 var auth = require('../../utils/auth');
 var User = require('../../models/User');
-var normalizeImage = require('../../utils/normalizeImage');
 
 exports.refreshToken = async function (req, res) {
   let refreshToken = req.body.refreshToken;
@@ -20,7 +19,7 @@ exports.refreshToken = async function (req, res) {
     JSON.stringify({
       data: {
         accessToken: accessToken,
-        user: await normalizeImage(user.toJSON())
+        user: await user.toJSON()
       }
     })
   );
@@ -40,7 +39,5 @@ exports.validateAccessToken = async function (req, res) {
   let user = await User.findOne({ username: decoded.username });
   return res
     .status(200)
-    .send(
-      JSON.stringify({ data: { user: await normalizeImage(user.toJSON()) } })
-    );
+    .send(JSON.stringify({ data: { user: await user.toJSON() } }));
 };

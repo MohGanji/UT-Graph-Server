@@ -1,6 +1,5 @@
 let UserEvent = require('../models/UserEvent');
 let Event = require('../models/Event');
-let normalizeImage = require('./normalizeImage');
 
 exports.getUserEvents = async function (user, role) {
   let userId = user._id;
@@ -16,7 +15,7 @@ exports.getUserEvents = async function (user, role) {
   );
   var mappedEvents = await Promise.all(
     events.map(async function (event) {
-      return normalizeImage(event.toJSON());
+      return event.toJSON();
     })
   );
   return mappedEvents;

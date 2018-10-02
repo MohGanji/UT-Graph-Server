@@ -1,7 +1,6 @@
 var User = require('../../models/User');
 var UserEvent = require('../../models/UserEvent');
 let Event = require('../../models/Event');
-var normalizeImage = require('../../utils/normalizeImage');
 
 exports.getUserByUsername = async function (req, res) {
   let username = req.params.username;
@@ -13,10 +12,7 @@ exports.getUserByUsername = async function (req, res) {
   }
 
   if (user) {
-    normalizeImage(user.toJSON());
-    return res
-      .status(200)
-      .send(JSON.stringify({ data: await normalizeImage(user.toJSON()) }));
+    return res.status(200).send(JSON.stringify({ data: await user.toJSON() }));
   } else {
     return res.status(404).send();
   }
@@ -48,7 +44,7 @@ exports.getUserEvents = async function (req, res) {
   }
   var mappedEvents = await Promise.all(
     events.map(async function (event) {
-      return normalizeImage(event.toJSON());
+      return event.toJSON();
     })
   );
   return res.status(200).send(JSON.stringify({ data: mappedEvents }));

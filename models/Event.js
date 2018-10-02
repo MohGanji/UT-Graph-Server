@@ -39,6 +39,10 @@ EventSchema.post('init', doc => {
   }
 });
 
+EventSchema.post('init', doc => {
+  doc.image = doc.image === '' ? '' : process.env.PUBLIC_URL + doc.image;
+});
+
 EventSchema.index({ title: 'text', organizer: 'text', description: 'text' });
 
 module.exports = mongoose.model('Event', EventSchema);

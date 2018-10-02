@@ -1,5 +1,4 @@
 var Sponser = require('../../models/Sponser');
-var normalizeImage = require('../../utils/normalizeImage');
 
 exports.createSponser = async function (req, res) {
   var name = req.body.data.name;
@@ -27,7 +26,7 @@ exports.getSponser = async function (req, res) {
 
   let mappedSponsers = await Promise.all(
     sponsers.map(async function (sponser) {
-      return normalizeImage(sponser.toJSON());
+      return sponser.toJSON();
     })
   );
 

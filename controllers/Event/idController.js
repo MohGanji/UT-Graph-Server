@@ -3,7 +3,6 @@ var User = require('../../models/User');
 var Event = require('../../models/Event');
 var UserEvent = require('../../models/UserEvent');
 var Notification = require('../../models/Notification');
-var normalizeImage = require('../../utils/normalizeImage');
 var findEventById = require('../../utils/findEventById');
 var getEventStaff = require('../../utils/getEventStaff');
 var getEventParticipantsCount = require('../../utils/getEventParticipantsCount');
@@ -125,7 +124,7 @@ exports.getEventStaff = async function (req, res) {
     );
     var mappedUsers = await Promise.all(
       users.map(async function (user) {
-        return normalizeImage(user.toJSON());
+        return user.toJSON();
       })
     );
     return res.status(200).send(JSON.stringify({ data: mappedUsers }));
