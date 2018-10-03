@@ -1,7 +1,7 @@
 let UserEvent = require('../models/UserEvent');
 let Event = require('../models/Event');
 
-exports.getUserEvents = async function (user, role) {
+module.exports = async function (user, role) {
   let userId = user._id;
   let docs, events;
 
