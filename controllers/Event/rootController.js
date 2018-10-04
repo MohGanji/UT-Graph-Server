@@ -101,7 +101,8 @@ exports.createEvent = async function (req, res) {
     user: userId,
     event: eventId,
     role: 'ORGANIZER',
-    date: new Date()
+    date: new Date(),
+    job: 'برگزار کننده'
   });
 
   return res.status(200).send(JSON.stringify({ data: eventId }));

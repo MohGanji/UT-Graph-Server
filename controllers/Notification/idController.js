@@ -30,7 +30,8 @@ exports.acceptById = async function (req, res) {
       user: userApplicant._id,
       event: event,
       role: 'STAFF',
-      date: new Date()
+      date: new Date(),
+      job: notification.job
     });
 
     await Notification.create({
@@ -38,7 +39,8 @@ exports.acceptById = async function (req, res) {
       read: false,
       type: 'ACCEPT',
       event: notification.event,
-      index: await Notification.find({}).count()
+      index: await Notification.find({}).count(),
+      job: notification.job
     });
 
     return res.status(200).send();

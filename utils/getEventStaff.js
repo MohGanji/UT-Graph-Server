@@ -10,7 +10,9 @@ module.exports = async function getEventStaff (id) {
   users = await Promise.all(
     docs.map(async function (doc) {
       let user = await User.findOne({ _id: doc.user });
-      return user.toJSON();
+      let userObject = await user.toJSON();
+      userObject.job = doc.job;
+      return userObject;
     })
   );
 

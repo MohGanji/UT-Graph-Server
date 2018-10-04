@@ -137,6 +137,7 @@ exports.signupStaff = async function (req, res) {
   let username = req.username;
   let eventId = req.params.id;
   let event = await Event.findOne({ _id: eventId });
+  let job = req.body.data.job;
 
   await Notification.create({
     user: event.organizer,
@@ -145,7 +146,8 @@ exports.signupStaff = async function (req, res) {
     hasButton: true,
     applicant: username,
     event: event._id,
-    index: await Notification.find({}).count()
+    index: await Notification.find({}).count(),
+    job: job
   });
 
   return res.status(200).send();
