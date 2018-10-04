@@ -40,7 +40,7 @@ exports.getUserEvents = async function (req, res) {
   }
 
   if (user) {
-    let eventsAsAdmin = await getUserEvents(user, 'ADMIN');
+    let eventsAsAdmin = await getUserEvents(user, 'ORGANIZER');
     let eventsAsAttendent = await getUserEvents(user, 'ATTENDENT');
     let eventsAsStaff = await getUserEvents(user, 'STAFF');
 
