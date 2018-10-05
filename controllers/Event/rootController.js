@@ -2,7 +2,6 @@ var Event = require('../../models/Event');
 var User = require('../../models/User');
 let UserEvent = require('../../models/UserEvent');
 var jalaali = require('jalaali-js');
-var normalizeImage = require('../../utils/normalizeImage');
 const { validationResult } = require('express-validator/check');
 
 exports.getEventsByType = async function (req, res) {
@@ -52,7 +51,7 @@ exports.getEventsByType = async function (req, res) {
 
   var mappedEvents = await Promise.all(
     events.map(async function (event) {
-      return normalizeImage(event.toJSON());
+      return event.toJSON();
     })
   );
 
@@ -102,7 +101,8 @@ exports.createEvent = async function (req, res) {
     user: userId,
     event: eventId,
     role: 'ORGANIZER',
-    date: new Date()
+    date: new Date(),
+    job: 'برگزار کننده'
   });
 
   return res.status(200).send(JSON.stringify({ data: eventId }));

@@ -3,7 +3,6 @@ var User = require('../../models/User');
 var Event = require('../../models/Event');
 var UserEvent = require('../../models/UserEvent');
 var Notification = require('../../models/Notification');
-var normalizeImage = require('../../utils/normalizeImage');
 var findEventById = require('../../utils/findEventById');
 var getEventStaff = require('../../utils/getEventStaff');
 var getEventParticipantsCount = require('../../utils/getEventParticipantsCount');
@@ -125,7 +124,7 @@ exports.getEventStaff = async function (req, res) {
     );
     var mappedUsers = await Promise.all(
       users.map(async function (user) {
-        return normalizeImage(user.toJSON());
+        return user.toJSON();
       })
     );
     return res.status(200).send(JSON.stringify({ data: mappedUsers }));
@@ -138,6 +137,7 @@ exports.signupStaff = async function (req, res) {
   let username = req.username;
   let eventId = req.params.id;
   let event = await Event.findOne({ _id: eventId });
+  let job = req.body.data.job;
 
   await Notification.create({
     user: event.organizer,
@@ -146,7 +146,8 @@ exports.signupStaff = async function (req, res) {
     hasButton: true,
     applicant: username,
     event: event._id,
-    index: await Notification.find({ user: event.organizer }).count()
+    index: await Notification.find({ user: event.organizer }).count(),
+    job: job
   });
 
   return res.status(200).send();

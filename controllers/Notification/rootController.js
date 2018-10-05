@@ -1,7 +1,6 @@
 var Notification = require('../../models/Notification');
 var User = require('../../models/User');
 var Event = require('../../models/Event');
-var normalizeImage = require('../../utils/normalizeImage');
 
 exports.getByStatus = async function (req, res) {
   var username = req.username;
@@ -21,7 +20,7 @@ exports.getByStatus = async function (req, res) {
     notifications.map(async function (notif) {
       let event = await Event.findById(notif.event);
       let notifObject = notif.toJSON();
-      notifObject.event = normalizeImage(event.toJSON());
+      notifObject.event = event.toJSON();
       return notifObject;
     })
   );

@@ -1,8 +1,7 @@
 let UserEvent = require('../models/UserEvent');
 let Event = require('../models/Event');
-let normalizeImage = require('./normalizeImage');
 
-exports.getUserEvents = async function (user, role) {
+module.exports = async function (user, role) {
   let userId = user._id;
   let docs, events;
 
@@ -10,14 +9,14 @@ exports.getUserEvents = async function (user, role) {
   events = await Promise.all(
     docs.map(async function (doc) {
       let event = await Event.findOne({ _id: doc.event });
-      event.role = doc.role;
-      return event;
+      let eventObject = await event.toJSON();
+      eventObject.role = doc.role;
+      eventObject.job = doc.job;
+      return eventObject;
     })
   );
-  var mappedEvents = await Promise.all(
-    events.map(async function (event) {
-      return normalizeImage(event.toJSON());
-    })
-  );
-  return mappedEvents;
+  let activeEvents = await events.filter(function (event) {
+    return event.active === true;
+  });
+  return activeEvents;
 };

@@ -25,6 +25,12 @@ UserSchema.methods.toJSON = function () {
   return obj;
 };
 
+UserSchema.post('init', doc => {
+  if (doc.image !== '' && doc.image.substring(0, 7) !== 'http://') {
+    doc.image = process.env.PUBLIC_URL + doc.image;
+  }
+});
+
 UserSchema.index({ username: 'text', firstName: 'text', lastName: 'text' });
 
 module.exports = mongoose.model('User', UserSchema);

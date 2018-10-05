@@ -1,7 +1,5 @@
 var User = require('../../models/User');
-var UserEvent = require('../../models/UserEvent');
-let Event = require('../../models/Event');
-var normalizeImage = require('../../utils/normalizeImage');
+var getUserEvents = require('../../utils/getUserEvents');
 
 exports.getUserByUsername = async function (req, res) {
   let username = req.params.username;
@@ -13,10 +11,20 @@ exports.getUserByUsername = async function (req, res) {
   }
 
   if (user) {
-    normalizeImage(user.toJSON());
-    return res
-      .status(200)
-      .send(JSON.stringify({ data: await normalizeImage(user.toJSON()) }));
+    let eventsAsAdmin = await getUserEvents(user, 'ORGANIZER');
+    let eventsAsAttendent = await getUserEvents(user, 'ATTENDENT');
+    let eventsAsStaff = await getUserEvents(user, 'STAFF');
+
+    return res.status(200).send(
+      JSON.stringify({
+        data: {
+          user: await user.toJSON(),
+          eventsAsAdmin,
+          eventsAsAttendent,
+          eventsAsStaff
+        }
+      })
+    );
   } else {
     return res.status(404).send();
   }
@@ -24,32 +32,28 @@ exports.getUserByUsername = async function (req, res) {
 
 exports.getUserEvents = async function (req, res) {
   let username = req.params.username;
-  let role = req.params.role;
-  let user = await User.findOne({ username: username });
-
-  if (!user) {
-    return res.status(404).send();
-  }
-
-  let userId = user._id;
-  let docs, events;
 
   try {
-    docs = await UserEvent.find({ user: userId, role: role });
-    events = await Promise.all(
-      docs.map(async function (doc) {
-        let event = await Event.findOne({ _id: doc.event });
-        event.role = doc.role;
-        return event;
-      })
-    );
+    var user = await User.findOne({ username: username });
   } catch (err) {
     return res.status(500).send();
   }
-  var mappedEvents = await Promise.all(
-    events.map(async function (event) {
-      return normalizeImage(event.toJSON());
-    })
-  );
-  return res.status(200).send(JSON.stringify({ data: mappedEvents }));
+
+  if (user) {
+    let eventsAsAdmin = await getUserEvents(user, 'ORGANIZER');
+    let eventsAsAttendent = await getUserEvents(user, 'ATTENDENT');
+    let eventsAsStaff = await getUserEvents(user, 'STAFF');
+
+    return res.status(200).send(
+      JSON.stringify({
+        data: {
+          eventsAsAdmin,
+          eventsAsAttendent,
+          eventsAsStaff
+        }
+      })
+    );
+  } else {
+    return res.status(404).send();
+  }
 };

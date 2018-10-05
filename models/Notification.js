@@ -13,7 +13,8 @@ var NotificationSchema = mongoose.Schema({
   event: mongoose.Schema.Types.ObjectId,
   index: Number,
   hasButton: { type: Boolean, default: false },
-  off: { type: Boolean, default: false }
+  off: { type: Boolean, default: false },
+  job: { type: String, default: '' }
 });
 
 NotificationSchema.methods.toJSON = function () {

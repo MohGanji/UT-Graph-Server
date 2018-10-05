@@ -1,5 +1,4 @@
 var User = require('../../models/User');
-var normalizeImage = require('../../utils/normalizeImage');
 const bcrypt = require('bcrypt');
 const config = require('../../utils/config');
 
@@ -11,7 +10,7 @@ exports.get_users = async function (req, res) {
   }
   var mappedUsers = await Promise.all(
     users.map(async function (user) {
-      return normalizeImage(user.toJSON());
+      return user.toJSON();
     })
   );
   res.status(200).send(JSON.stringify({ data: mappedUsers }));

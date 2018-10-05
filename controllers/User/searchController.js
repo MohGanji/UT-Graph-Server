@@ -1,5 +1,4 @@
 var User = require('../../models/User');
-var normalizeImage = require('../../utils/normalizeImage');
 
 exports.searchUser = async function (req, res) {
   let keyword = req.params.keyword;
@@ -26,7 +25,7 @@ exports.searchUser = async function (req, res) {
   } else {
     var mappedDocs = await Promise.all(
       docs.map(async function (doc) {
-        return normalizeImage(doc.toJSON());
+        return doc.toJSON();
       })
     );
     return res.status(200).send(JSON.stringify({ data: mappedDocs }));
