@@ -15,5 +15,8 @@ module.exports = async function (user, role) {
       return eventObject;
     })
   );
-  return events;
+  let activeEvents = await events.filter(function (event) {
+    return event.active === true;
+  });
+  return activeEvents;
 };
