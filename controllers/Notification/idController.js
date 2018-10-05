@@ -38,7 +38,7 @@ exports.acceptById = async function (req, res) {
       read: false,
       type: 'ACCEPT',
       event: notification.event,
-      index: await Notification.find({}).count()
+      index: await Notification.find({ user: notification.applicant }).count()
     });
 
     return res.status(200).send();
@@ -71,7 +71,7 @@ exports.rejectById = async function (req, res) {
       read: false,
       type: 'REJECT',
       event: notification.event,
-      index: await Notification.find({}).count()
+      index: await Notification.find({ user: notification.applicant }).count()
     });
 
     return res.status(200).send();

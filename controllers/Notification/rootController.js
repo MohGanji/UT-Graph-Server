@@ -17,7 +17,6 @@ exports.getByStatus = async function (req, res) {
   } catch (err) {
     return res.status(500).send();
   }
-
   var mappedNotifications = await Promise.all(
     notifications.map(async function (notif) {
       let event = await Event.findById(notif.event);
