@@ -12,7 +12,7 @@ exports.sponserSearch = async function (req, res) {
     docs = await Sponser.find({
       $or: [
         { name: { $regex: '.*' + keyword + '.*' } },
-        { url: { $regex: '.*' + keyword + '.*' } }
+        // { url: { $regex: '.*' + keyword + '.*' } }
       ]
     });
   } catch (err) {
