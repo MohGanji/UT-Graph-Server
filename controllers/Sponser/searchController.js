@@ -5,9 +5,9 @@ exports.sponserSearch = async function (req, res) {
   let keyword = req.params.keyword;
   let docs;
 
-  if (keyword.length < 2) {
-    return res.status(404).send();
-  }
+  // if (keyword.length < 2) {
+  //   return res.status(404).send();
+  // }
 
   try {
     docs = await Sponser.find({
