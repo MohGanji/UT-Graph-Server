@@ -26,7 +26,9 @@ UserSchema.methods.toJSON = function () {
 };
 
 UserSchema.post('init', doc => {
-  doc.image = doc.image === '' ? '' : process.env.PUBLIC_URL + doc.image;
+  if (doc.image !== '' && doc.image.substring(0, 7) !== 'http://') {
+    doc.image = process.env.PUBLIC_URL + doc.image;
+  }
 });
 
 UserSchema.index({ username: 'text', firstName: 'text', lastName: 'text' });
