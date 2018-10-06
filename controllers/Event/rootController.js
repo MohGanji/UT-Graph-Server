@@ -91,7 +91,6 @@ exports.createEvent = async function (req, res) {
     description: description,
     location: location,
     createTime: createTime,
-    image: 'defaultEvent.svg',
     capacity: capacity
   }).catch(() => res.status(500).send());
 

@@ -9,7 +9,7 @@ var EventSchema = mongoose.Schema({
   description: String,
   createTime: Date,
   location: String,
-  image: String,
+  image: { type: String, default: '' },
   isPassed: Boolean,
   active: { type: Boolean, default: true },
   capacity: { type: Number, default: 0 }

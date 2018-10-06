@@ -7,7 +7,7 @@ var UserSchema = mongoose.Schema({
   lastName: String,
   email: String,
   sid: String,
-  image: String,
+  image: { type: String, default: '' },
   active: { type: Boolean, default: false },
   role: {
     type: String,
