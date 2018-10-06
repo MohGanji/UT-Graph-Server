@@ -42,7 +42,12 @@ exports.handleResetPassword = async function (req, res) {
 exports.submitNewResetRequest = async function (req, res) {
   try {
     let userEmail = req.body.data.email;
+
     let user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).send();
+    }
+
     let previousRequest = await ResetPasswordRequest.findOne({ user: user });
     let hash;
     if (previousRequest) {
