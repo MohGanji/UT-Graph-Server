@@ -1,6 +1,7 @@
 var Event = require('../../models/Event');
 var User = require('../../models/User');
 let UserEvent = require('../../models/UserEvent');
+let Sponser = require('../../models/Sponser');
 var jalaali = require('jalaali-js');
 const { validationResult } = require('express-validator/check');
 
@@ -82,6 +83,13 @@ exports.createEvent = async function (req, res) {
   let user = await User.findOne({ username: organizer });
   let userId = user._id;
   let capacity = req.body.data.capacity;
+  let staffs = req.body.data.staffs;
+
+  let sponsers = req.body.data.sponsers;
+  let sponsersId = sponsers.map(async (sponserName) => {
+    let sponser = Sponser.find({ name: sponserName });
+    return sponser._id;
+  });
 
   let newEvent = await Event.create({
     title: title,
@@ -92,11 +100,21 @@ exports.createEvent = async function (req, res) {
     location: location,
     createTime: createTime,
     image: 'defaultEvent.svg',
-    capacity: capacity
+    capacity: capacity,
+    sponsers: sponsersId
   }).catch(() => res.status(500).send());
 
   let eventId = newEvent._id;
 
+  staffs.map(async (staff) => {
+    await UserEvent.create({
+      user: userId,
+      event: eventId,
+      role: 'STAFF',
+      date: new Date(),
+      job: 'کمک کننده'
+    });
+  });
   await UserEvent.create({
     user: userId,
     event: eventId,
