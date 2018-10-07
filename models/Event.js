@@ -12,7 +12,8 @@ var EventSchema = mongoose.Schema({
   image: String,
   isPassed: Boolean,
   active: { type: Boolean, default: true },
-  capacity: { type: Number, default: 0 }
+  capacity: { type: Number, default: 0 },
+  sponsers: [mongoose.Schema.Types.ObjectId]
 });
 
 EventSchema.methods.toJSON = function () {
