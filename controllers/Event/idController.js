@@ -139,11 +139,6 @@ exports.signupStaff = async function (req, res) {
   let event = await Event.findOne({ _id: eventId });
   let job = req.body.data.job;
 
-  let user = User.findOne({ username: username });
-  let staff = UserEvent.find({ user: user._id });
-  if (staff) {
-    return res.status(422).send();
-  }
   await Notification.create({
     user: event.organizer,
     read: false,
@@ -170,7 +165,11 @@ exports.signupAttendent = async function (req, res) {
     return res.status(422).send();
   }
 
-  let attendent = UserEvent.find({ user: user._id });
+  let attendent = await UserEvent.findOne({
+    user: user._id,
+    event: eventId,
+    role: 'ATTENDENT'
+  });
   if (attendent) {
     return res.status(422).send();
   }
