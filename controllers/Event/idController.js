@@ -139,6 +139,11 @@ exports.signupStaff = async function (req, res) {
   let event = await Event.findOne({ _id: eventId });
   let job = req.body.data.job;
 
+  let user = User.findOne({ username: username });
+  let staff = UserEvent.find({ user: user._id });
+  if (staff) {
+    return res.status(422).send();
+  }
   await Notification.create({
     user: event.organizer,
     read: false,
@@ -162,6 +167,11 @@ exports.signupAttendent = async function (req, res) {
   let event = await Event.findById(eventId);
   let participantsCount = await getEventParticipantsCount(eventId);
   if (event.capacity === participantsCount) {
+    return res.status(422).send();
+  }
+
+  let attendent = UserEvent.find({ user: user._id });
+  if (attendent) {
     return res.status(422).send();
   }
 
