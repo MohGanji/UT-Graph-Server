@@ -25,7 +25,7 @@ exports.registerUser = async function (req, res) {
   } else {
     newUser.role = 'USER';
   }
-  newUser.image = 'defaultProfile.svg';
+
   try {
     let userHash =
       (await Buffer.from(userEmail).toString('base64')) + (await uuid.v4());
