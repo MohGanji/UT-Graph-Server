@@ -86,10 +86,12 @@ exports.createEvent = async function (req, res) {
   let staffs = req.body.data.staffs;
 
   let sponsers = req.body.data.sponsers;
-  let sponsersId = sponsers.map(async (sponserName) => {
-    let sponser = Sponser.find({ name: sponserName });
-    return sponser._id;
-  });
+  let sponsersId = await Promise.all(
+    sponsers.map(async sponserItem => {
+      let sponser = await Sponser.findOne({ name: sponserItem.name });
+      return sponser._id;
+    })
+  );
 
   let newEvent = await Event.create({
     title: title,
@@ -105,7 +107,7 @@ exports.createEvent = async function (req, res) {
 
   let eventId = newEvent._id;
 
-  staffs.map(async (staff) => {
+  staffs.map(async staff => {
     await UserEvent.create({
       user: userId,
       event: eventId,
