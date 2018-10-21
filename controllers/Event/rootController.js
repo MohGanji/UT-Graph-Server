@@ -109,11 +109,11 @@ exports.createEvent = async function (req, res) {
 
   staffs.map(async staff => {
     await UserEvent.create({
-      user: userId,
+      user: staff._id,
       event: eventId,
       role: 'STAFF',
       date: new Date(),
-      job: 'کمک کننده'
+      job: 'همکار'
     });
   });
   await UserEvent.create({
