@@ -7,6 +7,7 @@ var findEventById = require('../../utils/findEventById');
 var getEventStaff = require('../../utils/getEventStaff');
 var getEventParticipantsCount = require('../../utils/getEventParticipantsCount');
 var findUserByUsername = require('../../utils/findUserByUsername');
+var getEventSponsers = require('../../utils/getEventSponsers');
 var auth = require('../../utils/auth');
 
 exports.getEvent = async function (req, res) {
@@ -16,12 +17,15 @@ exports.getEvent = async function (req, res) {
     let staff = await getEventStaff(id);
     let participantsCount = await getEventParticipantsCount(id);
     let organizer = await findUserByUsername(event.organizer);
+    let sponsers = await getEventSponsers(id);
+
     let result = {
       data: {
         event: event,
         staff: staff,
         participantsCount: participantsCount,
-        organizer: organizer
+        organizer: organizer,
+        sponsers: sponsers
       }
     };
 
