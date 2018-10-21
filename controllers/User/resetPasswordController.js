@@ -14,7 +14,8 @@ exports.renderResetPaswordPage = async function (req, res) {
     });
     if (!resetPasswordRequest) {
       return res.render('result_page.ejs', {
-        text: 'لینک بازیابی رمز عبور شما معتبر نمیباشد'
+        text: 'لینک بازیابی رمز عبور شما معتبر نمیباشد',
+        header: 'بازیابی رمز عبور'
       });
     }
     let userId = resetPasswordRequest.user;

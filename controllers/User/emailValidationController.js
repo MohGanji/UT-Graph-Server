@@ -15,7 +15,8 @@ exports.validateEmail = async function (req, res) {
     await User.findByIdAndUpdate(userId, { $set: { active: true } });
     await emailValidation.remove(); // I'm deleting it!
     res.render('result_page.ejs', {
-      text: 'حساب کاربری شما با موفقیت فعال شد'
+      text: 'حساب کاربری شما با موفقیت فعال شد',
+      header: 'فعالسازی حساب کاربری'
     });
   } catch (error) {
     console.log(error);
