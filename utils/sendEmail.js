@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const email = require('../mail/');
+const email = require('../utils/mail');
 
 module.exports = async function (mailOptions) {
   let transporter = nodemailer.createTransport({

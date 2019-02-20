@@ -1,4 +1,4 @@
-const admins = ['mahdi.jahed', 'hadi.hojjat', 'arman.rostami'];
+const admins = ['mahdi.jahed', 'mhadih', 'arman.rostami'];
 
 module.exports = username => {
   return admins.find(function (element) {

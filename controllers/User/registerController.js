@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const config = require('../../utils/config');
 const { validationResult } = require('express-validator/check');
 const uuid = require('uuid');
-const email = require('../../mail/');
+const email = require('../../utils/mail');
 var sendEmail = require('../../utils/sendEmail');
 
 exports.registerUser = async function (req, res) {
