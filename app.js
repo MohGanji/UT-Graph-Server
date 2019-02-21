@@ -11,7 +11,7 @@ const mongoose = require('./utils/mongo');
 var app = express();
 // router.use('/public', express.static(__dirname + '/public'));
 // router.use(express.static('public'))
-app.use('/public', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
